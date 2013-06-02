@@ -58,6 +58,9 @@ public:
 	inline size_t count() const {
 		return (buf_base != ptr_t()) ? buf_dend - buf_base : 0;
 	}
+	inline bool empty() const {
+		return (buf_base == ptr_t() || buf_dend == buf_base);
+	}
 	
 	inline void clear() { buf_dend = buf_base; }
 	void reserve(size_t n);
