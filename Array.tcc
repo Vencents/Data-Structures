@@ -179,10 +179,11 @@ size_t Array<T, Alloc>::unshift(typename Const<ref_t>::type val) {
 }
 
 template <typename T, typename Alloc>
-size_t Array<T, Alloc>::insert(size_t index, typename Const<ref_t>::type val) {
+size_t Array<T, Alloc>::insert(ssize_t index, typename Const<ref_t>::type val) {
 	ptr_t ptr;
 	if (buf_dend == buf_end) double_capacity();
-	ptr = buf_base + index;
+	if (index < 0) ptr = buf_dend - index;
+	else ptr = buf_base + index;
 	if (ptr == buf_dend) {
 		allocator.construct(ptr, val);
 		return ++buf_dend - buf_base;
@@ -194,11 +195,12 @@ size_t Array<T, Alloc>::insert(size_t index, typename Const<ref_t>::type val) {
 }
 
 template <typename T, typename Alloc>
-void Array<T, Alloc>::remove(size_t index, size_t n) {
+void Array<T, Alloc>::remove(ssize_t index, size_t n) {
 	ptr_t p;
 	if (this->count() < n) throw Erange();
-	p = buf_base + index + n;
-	if (p != buf_dend) Algorithm::move(p - n, p, buf_dend - p);
+	if (index < 0) p = buf_dend - index + n;
+	else p = buf_base + index + n;
+	if (p < buf_dend) Algorithm::move(p - n, p, buf_dend - p);
 	buf_dend -= n;
 	allocator.destroy(buf_dend, n);
 }

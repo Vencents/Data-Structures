@@ -71,8 +71,8 @@ public:
 	value_t shift();
 	size_t unshift(typename Const<ref_t>::type val);
 
-	size_t insert(size_t index, typename Const<ref_t>::type val);
-	void remove(size_t index, size_t count);
+	size_t insert(ssize_t index, typename Const<ref_t>::type val);
+	void remove(ssize_t index, size_t count);
 	Array slice(ssize_t start, ssize_t length) const;
 	Array splice(ssize_t start, size_t length, const Array &a) const;
 	void fill(ssize_t start, size_t count, typename Const<ref_t>::type val);
