@@ -204,15 +204,13 @@ void Array<T, Alloc>::remove(size_t index, size_t n) {
 }
 
 template <typename T, typename Alloc>
-Array<T, Alloc> Array<T, Alloc>::slice(ssize_t start, ssize_t end) const {
-	size_t c, real_start, real_end;
+Array<T, Alloc> Array<T, Alloc>::slice(ssize_t start, ssize_t length) const {
+	size_t c, real_start;
 	c = this->count();
 	if (buf_base + end >= buf_dend) throw Erange();
 	if (start < 0) real_start = c + start;
 	else real_start = start;
-	if (end < 0) real_end = c + end;
-	else real_end = end;
-	return Array(buf_base + real_start, real_end - real_start + 1);
+	return Array(buf_base + real_start, length);
 }
 
 template <typename T, typename Alloc>

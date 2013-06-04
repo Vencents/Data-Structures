@@ -58,9 +58,6 @@ public:
 	inline size_t count() const {
 		return (buf_base != ptr_t()) ? buf_dend - buf_base : 0;
 	}
-	inline bool empty() const {
-		return (buf_base == ptr_t() || buf_dend == buf_base);
-	}
 	
 	inline void clear() { buf_dend = buf_base; }
 	void reserve(size_t n);
@@ -76,7 +73,7 @@ public:
 
 	size_t insert(size_t index, typename Const<ref_t>::type val);
 	void remove(size_t index, size_t count);
-	Array slice(ssize_t start, ssize_t end) const;
+	Array slice(ssize_t start, ssize_t length) const;
 	Array splice(ssize_t start, size_t length, const Array &a) const;
 	void fill(ssize_t start, size_t count, typename Const<ref_t>::type val);
 

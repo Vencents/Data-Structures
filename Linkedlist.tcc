@@ -248,3 +248,21 @@ template <typename T, typename Alloc>
 void Linkedlist<T, Alloc>::set(typename Const<ptr_t>::type p, size_t n) {
 	this->set(p, n);
 }
+
+template <typename T, typename Alloc>
+typename Linkedlist<T, Alloc>::Iterator Linkedlist<T, Alloc>::find(typename Const<ref_t>::type val) const {
+	Linkedlist_Node<T> *node;
+	for (node = base_node.next; node != &end_node; node = node->next) {
+		if (node->val == val) return Linkedlist_Iterator<T, Alloc>(node);
+	}
+	return Linkedlist_Iterator<T, Alloc>(&end_node);
+}
+
+template <typename T, typename Alloc>
+typename Linkedlist<T, Alloc>::Iterator Linkedlist<T, Alloc>::rfind(typename Const<ref_t>::type val) const {
+	Linkedlist_Node<T> *node;
+	for (node = end_node.prev; node != &base_node; node = node->prev) {
+		if (node->val == val) return Linkedlist_Iterator<T, Alloc>(node);
+	}
+	return Linkedlist_Iterator<T, Alloc>(&end_node);
+}

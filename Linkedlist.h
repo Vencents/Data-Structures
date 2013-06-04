@@ -109,7 +109,9 @@ public:
 
 	size_t insert(Iterator pos, typename Const<ref_t>::type val);
 	void remove(Iterator pos, size_t count = 1);
-	
+
+	Iterator find(typename Const<ref_t>::type val) const;
+	Iterator rfind(typename Const<ref_t>::type val) const;
 };	
 
 #include "Linkedlist.tcc"
