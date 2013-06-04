@@ -549,7 +549,7 @@ class Erange : public Exception {
 public:
 	Erange() : Exception(ERANGE) {}
 	const char * what() const throw() {
-		return "Result too large.";
+		return "Out of range.";
 	}
 };
 
