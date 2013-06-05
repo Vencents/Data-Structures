@@ -120,7 +120,7 @@ void Array<T, Alloc>::reserve(size_t n) {
 }
 
 template <typename T, typename Alloc>
-void Array<T, Alloc>::resize(size_t n) {
+void Array<T, Alloc>::resize(size_t n, typename Const<ref_t>::type val) {
 	ptr_t old_dend;
 	if (n == buf_dend - buf_base) return;
 	while (buf_base + n > buf_end) double_capacity();
@@ -128,7 +128,7 @@ void Array<T, Alloc>::resize(size_t n) {
 	buf_dend = buf_base + n;
 	if (old_dend < buf_dend) {
 		for (; old_dend != buf_dend; ++old_dend) {
-			allocator.construct(old_dend, value_t());
+			allocator.construct(old_dend, val);
 		}
 	} else {
 		for (; old_dend != buf_dend; --old_dend) {

@@ -209,6 +209,26 @@ void Linkedlist<T, Alloc>::remove(Iterator pos, size_t count) {
 }
 
 template <typename T, typename Alloc>
+void Linkedlist<T, Alloc>::fill(Iterator pos, size_t n, typename Const<ref_t>::type val) {
+	size_t i = 0;
+	Linkedlist_Node<T> *node;
+	while (pos.curr != &end_node) {
+		pos.curr->val = val;
+		++pos; ++i; ++_count;
+		if (i == n) return;
+	}
+	for (; i != n; ++i) {
+		node = allocator.alloc(1);
+		node->construct(val);
+		node->next = &end_node;
+		node->prev = end_node.prev;
+		node->prev->next = node;
+		end_node.prev = node;
+		++_count;
+	}
+}
+
+template <typename T, typename Alloc>
 void Linkedlist<T, Alloc>::swap(const Linkedlist &t) {
 	Algorithm::swap(base_node, t.base_node);
 	Algorithm::swap(end_node, t.end_node);
@@ -265,4 +285,88 @@ typename Linkedlist<T, Alloc>::Iterator Linkedlist<T, Alloc>::rfind(typename Con
 		if (node->val == val) return Linkedlist_Iterator<T, Alloc>(node);
 	}
 	return Linkedlist_Iterator<T, Alloc>(&end_node);
+}
+
+template <typename T, typename Alloc>
+typename Linkedlist<T, Alloc>::ref_t Linkedlist<T, Alloc>::operator [] (ssize_t index) {
+	size_t i = 0, real_index;
+	Linkedlist_Node<T> *node;
+	if (index < 0) real_index = _count + index;
+	else real_index = index;
+	if (real_index >= _count) throw Erange();
+	if (real_index <= _count - real_index) {
+		for (node = base_node.next; node != &end_node; node = node->next) {
+			if (i == real_index) return node->val;
+			++i;
+		}
+	} else {
+		i = _count - 1;	
+		for (node = end_node.prev; node != &base_node; node = node->prev) {
+			if (i == real_index) return node->val;
+			--i;
+		}
+	}
+}
+
+template <typename T, typename Alloc>
+typename Const<typename Linkedlist<T, Alloc>::ref_t>::type Linkedlist<T, Alloc>::operator [] (ssize_t index) const {
+	size_t i = 0, real_index;
+	Linkedlist_Node<T> *node;
+	if (index < 0) real_index = _count + index;
+	else real_index = index;
+	if (real_index >= _count) throw Erange();
+	if (real_index <= _count - real_index) {
+		for (node = base_node.next; node != &end_node; node = node->next) {
+			if (i == real_index) return node->val;
+			++i;
+		}
+	} else {
+		i = _count - 1;	
+		for (node = end_node.prev; node != &base_node; node = node->prev) {
+			if (i == real_index) return node->val;
+			--i;
+		}
+	}
+}
+
+template <typename T, typename Alloc>
+typename Linkedlist<T, Alloc>::Iterator Linkedlist<T, Alloc>::from(ssize_t index) {
+	size_t i = 0, real_index;
+	Linkedlist_Node<T> *node;
+	if (index < 0) real_index = _count + index;
+	else real_index = index;
+	if (real_index >= _count) throw Erange();
+	if (real_index <= _count - real_index) {
+		for (node = base_node.next; node != &end_node; node = node->next) {
+			if (i == real_index) return typename Linkedlist<T, Alloc>::Iterator(node);
+			++i;
+		}
+	} else {
+		i = _count - 1;
+		for (node = end_node.prev; node != &base_node; node = node->prev) {
+			if (i == real_index) return typename Linkedlist<T, Alloc>::Iterator(node);
+			--i;
+		}
+	}
+}
+
+template <typename T, typename Alloc>
+typename Const<typename Linkedlist<T, Alloc>::Iterator>::type Linkedlist<T, Alloc>::from(ssize_t index) const {
+	size_t i = 0, real_index;
+	Linkedlist_Node<T> *node;
+	if (index < 0) real_index = _count + index;
+	else real_index = index;
+	if (real_index >= _count) throw Erange();
+	if (real_index <= _count - real_index) {
+		for (node = base_node.next; node != &end_node; node = node->next) {
+			if (i == real_index) return typename Linkedlist<T, Alloc>::Iterator(node);
+			++i;
+		}
+	} else {
+		i = _count - 1;
+		for (node = end_node.prev; node != &base_node; node = node->prev) {
+			if (i == real_index) return typename Linkedlist<T, Alloc>::Iterator(node);
+			--i;
+		}
+	}
 }

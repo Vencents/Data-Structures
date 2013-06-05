@@ -54,6 +54,7 @@ public:
 	Linkedlist_Iterator operator -- (int) const;
 	bool operator == (const Linkedlist_Iterator &i) const;
 	bool operator != (const Linkedlist_Iterator &i) const;
+	
 };
 
 template <typename Type, typename Alloc = Allocator< Linkedlist_Node<Type> > >
@@ -90,28 +91,35 @@ public:
 	template <typename InputIter>
 	void set(typename Const<InputIter>::type p, size_t n);
 	void set(typename Const<ptr_t>::type p, size_t n);
-
 	void swap(const Linkedlist &l);
-
-	value_t pop();
-	size_t push(typename Const<ref_t>::type val);
-
-	value_t shift();
-	size_t unshift(typename Const<ref_t>::type val);
-
-	value_t first();
-	value_t last();
-
 	void clear();
 	void resize(size_t n, typename Const<ref_t>::type val = value_t());
-	
 	size_t count() const { return _count; }
-
+	value_t first();
+	value_t last();
+//Fast
+	size_t push(typename Const<ref_t>::type val);
+	value_t pop();
+	size_t unshift(typename Const<ref_t>::type val);
+	value_t shift();
 	size_t insert(Iterator pos, typename Const<ref_t>::type val);
 	void remove(Iterator pos, size_t count = 1);
-
+	void fill(Iterator pos, size_t n, typename Const<ref_t>::type val);
+//Slow
+	ref_t operator [] (ssize_t index);
+	typename Const<ref_t>::type operator [] (ssize_t index) const;
 	Iterator find(typename Const<ref_t>::type val) const;
 	Iterator rfind(typename Const<ref_t>::type val) const;
+	Iterator from(ssize_t index);
+	typename Const<Iterator>::type from(ssize_t index) const;
+
+	inline size_t insert(ssize_t pos, typename Const<ref_t>::type val)
+		{ return this->insert(this->from(pos), val); }
+	inline void remove(ssize_t pos, size_t count = 1)
+		{ this->remove(this->from(pos), count); }
+	inline void fill(ssize_t pos, size_t n, typename Const<ref_t>::type val)
+		{ this->fill(this->from(pos), n, val); }
+
 };	
 
 #include "Linkedlist.tcc"
