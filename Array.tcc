@@ -285,3 +285,23 @@ ssize_t Array<T, Alloc>::rfind(typename Const<ref_t>::type val) const {
 	if (p == ptr_t()) return -1;
 	return p - buf_base;
 }
+
+template <typename T, typename Alloc>
+typename Array<T, Alloc>::Iterator Array<T, Alloc>::from(ssize_t index) {
+	ptr_t p;
+	if (buf_base == ptr_t()) throw Erange();
+	if (index < 0) p = buf_dend + index;
+	else p = buf_base + index;
+	if (p >= buf_dend) throw Erange();
+	return p;
+}
+
+template <typename T, typename Alloc>
+typename Const<typename Array<T, Alloc>::Iterator>::type Array<T, Alloc>::from(ssize_t index) const {
+	ptr_t p;
+	if (buf_base == ptr_t()) throw Erange();
+	if (index < 0) p = buf_dend + index;
+	else p = buf_base + index;
+	if (p >= buf_dend) throw Erange();
+	return p;
+}

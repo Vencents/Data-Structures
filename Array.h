@@ -32,6 +32,8 @@ public:
 	typename Const<Iterator>::type end() const	{ return buf_dend; }
 	typename Const<Reverser>::type rbegin() const	{ return buf_dend; }
 	typename Const<Reverser>::type rend() const	{ return buf_base; }
+	Iterator from(ssize_t index);
+	typename Const<Iterator>::type from(ssize_t index) const;
 
 	Array &operator = (const Array &a);
 
