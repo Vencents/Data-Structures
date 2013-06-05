@@ -18,8 +18,17 @@ public:
 		front = typename Container::Iterator(c.begin());
 		rear = typename Container::Iterator(c.begin());
 	}
-	Ringbuffer(const Ringbuffer &r) : c(r.c), front(r.front), rear(r.rear), _count(), front_index(r.front_index), rear_index(r.rear_index) {}
-	Ringbuffer(const Container &container) : c(container), front(c.begin()), rear(c.end()), _count(c.count()), front_index(), rear_index(c.count()) { --rear; --rear_index; c.resize(c.count() * 2); }
+	Ringbuffer(const Ringbuffer &r) :
+		c(r.c), front(r.front),
+		rear(r.rear), _count(),
+		front_index(r.front_index), rear_index(r.rear_index) {}
+	Ringbuffer(const Container &container) :
+		c(container), front(c.begin()),
+		rear(c.end()), _count(c.count()),
+		front_index(), rear_index(c.count())
+	{
+		--rear; --rear_index; c.resize(c.count() * 2);
+	}
 
 	size_t push(typename Const<ref_t>::type val);
 	value_t pop();
