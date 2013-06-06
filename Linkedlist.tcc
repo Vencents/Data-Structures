@@ -200,12 +200,19 @@ size_t Linkedlist<T, Alloc>::insert(Iterator pos, typename Const<ref_t>::type va
 }
 
 template <typename T, typename Alloc>
-void Linkedlist<T, Alloc>::remove(Iterator pos, size_t count) {
-	Linkedlist_Node<T> *node;
-	pos.curr->destroy();
-	pos.curr->prev->next = pos.curr->next;
-	pos.curr->next->prev = pos.curr->prev;
-	allocator.free(pos.curr);
+void Linkedlist<T, Alloc>::remove(Iterator pos, size_t n) {
+	Linkedlist_Node<T> *node, *next;
+	if (n > _count) throw Erange();
+	for (size_t i = 0; i != n; ++i) {
+		if (pos == &end_node) throw Erange();
+		pos.curr->destroy();
+		next = pos.curr->next;
+		pos.curr->prev->next = next;
+		pos.curr->next->prev = pos.curr->prev;
+		allocator.free(pos.curr);
+		pos = next;
+		--_count;
+	}
 }
 
 template <typename T, typename Alloc>

@@ -5,6 +5,7 @@
 #include "Iterator.h"
 #include "Allocator.h"
 #include "Exception.h"
+#include "Algorithm.h"
 
 template <typename T>
 class Linkedlist_Node {
@@ -70,7 +71,7 @@ protected:
 	size_t _count;
 	Alloc	allocator;
 	/* base_node links right before the first element, end_node links right after the last element */
-	Linkedlist_Node<Type> base_node, end_node;
+	mutable Linkedlist_Node<Type> base_node, end_node;
 public:
 	Linkedlist();
 	Linkedlist(const Linkedlist &l);

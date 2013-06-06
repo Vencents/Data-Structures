@@ -1,6 +1,7 @@
 #ifndef ALGORITHM_H
 #define ALGORITHM_H
 
+#include "Types.h"
 #include <stdlib.h>
 
 class Algorithm {
