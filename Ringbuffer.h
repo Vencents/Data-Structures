@@ -13,6 +13,23 @@ protected:
 	Container c;
 	typename Container::Iterator front, rear;
 	size_t front_index, rear_index, _count;
+	inline void next(typename Container::Iterator &it, size_t &i) {
+		++it;
+		++i;
+		if (it == c.end()) {
+			it = c.begin();
+			i = 0;
+		}
+	}
+	inline void prev(typename Container::Iterator &it, size_t &i) {
+		--it;
+		--i;
+		if (it == c.begin()) {
+			it = c.end();
+			--it;
+			i = c.count() - 1;
+		}
+	}
 public:
 	Ringbuffer(size_t size) : c(size), front_index(), rear_index() {
 		front = typename Container::Iterator(c.begin());
