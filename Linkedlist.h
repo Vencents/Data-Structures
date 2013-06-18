@@ -59,7 +59,7 @@ public:
 	
 };
 
-template <typename Type, typename Alloc = Allocator< Linkedlist_Node<Type> > >
+template <typename Type, typename Alloc = Allocator>
 class Linkedlist {
 public:
 	typedef Type	value_t;
@@ -69,7 +69,7 @@ public:
 	typedef ::Reverser<Iterator>			Reverser;
 protected:
 	size_t _count;
-	Alloc	allocator;
+	Object_Allocator<Linkedlist_Node<Type>, Alloc> allocator;
 	/* base_node links right before the first element, end_node links right after the last element */
 	mutable Linkedlist_Node<Type> base_node, end_node;
 public:

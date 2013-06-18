@@ -7,7 +7,7 @@
 #include "Exception.h"
 #include "Algorithm.h"
 
-template <typename Type, typename Alloc = Allocator<Type> >
+template <typename Type, typename Alloc = Allocator >
 class Array {
 public:
 	typedef Type				value_t;
@@ -16,7 +16,7 @@ public:
 	typedef ptr_t				Iterator;
 	typedef ::Reverser<Iterator>		Reverser;
 protected:
-	Alloc		allocator;
+	Object_Allocator<Type, Alloc> allocator;
 	mutable ptr_t	buf_base;
 	mutable ptr_t	buf_dend;
 	mutable ptr_t	buf_end;

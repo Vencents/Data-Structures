@@ -54,7 +54,7 @@ public:
 		{ return curr != i.curr; }
 };
 
-template <typename T, typename Alloc = Allocator< Slinkedlist_Node<T> > >
+template <typename T, typename Alloc = Allocator>
 class Slinkedlist {
 public:
 	typedef T	value_t;
@@ -63,7 +63,7 @@ public:
 	typedef Slinkedlist_Iterator<T, Alloc>	Iterator;
 protected:
 	size_t _count;
-	Alloc allocator;
+	Object_Allocator<Slinkedlist_Node<T>, Alloc> allocator;
 	Slinkedlist_Node<T> *front, *back, before_front;
 public:	
 	Slinkedlist() :

@@ -156,9 +156,13 @@ size_t Slinkedlist<T, A>::unshift(typename Const<ref_t>::type val) {
 
 template <typename T, typename A>
 typename Slinkedlist<T, A>::value_t Slinkedlist<T, A>::shift() {
+	Slinkedlist_Node<T> *node;
 	if (front == 0) throw Enodata();
 	value_t tmp(front->val);
-	front = front->next;
+	node = front;
+	front = node->next;
+	node->destroy();
+	allocator.free(node);
 	return tmp;	
 }
 
