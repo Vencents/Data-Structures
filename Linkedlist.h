@@ -81,6 +81,9 @@ public:
 	Linkedlist(typename Const<ptr_t>::type p, size_t n);
 	~Linkedlist();
 
+	void move(Linkedlist &t);
+	void swap(Linkedlist &t);
+
 	Iterator begin();
 	Iterator end();
 	typename Const<Iterator>::type begin() const;

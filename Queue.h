@@ -17,28 +17,24 @@ public:
 	Queue(const Container &_c) : c(_c) {}
 	
 	inline void push(typename Const<ref_t>::type val)
-	{
-		c.push(val);
-	}
+		{ c.push(val); }
 
 	inline value_t pop()
-	{
-		return c.shift();
-	}
+		{ return c.shift(); }
 
 	inline value_t peek()
-	{
-		return c.first();
-	}
+		{ return c.first(); }
 
 	inline size_t count()
-	{
-		return c.count();
-	}
+		{ return c.count(); }
 
 	inline void clear()
-	{
-		c.clear();
-	}
+		{ c.clear(); }
+	
+	inline void move(Queue &q)
+		{ c.move(q.c); }
+
+	inline void swap(Queue &q)
+		{ c.swap(q.c); }
 };
 #endif

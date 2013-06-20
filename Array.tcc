@@ -1,4 +1,14 @@
 template <typename T, typename Alloc>
+void Array<T, Alloc>::move(Array &a) {
+	a.buf_base = buf_base;
+	a.buf_dend = buf_dend;
+	a.buf_end = buf_end;
+	buf_base = ptr_t();
+	buf_dend = ptr_t();
+	buf_end = ptr_t();
+}
+
+template <typename T, typename Alloc>
 void Array<T, Alloc>::double_capacity() {
 	ptr_t newbase;
 	ptrdiff_t dend_offset, end_offset;
@@ -12,7 +22,7 @@ void Array<T, Alloc>::double_capacity() {
 }
 
 template <typename T, typename Alloc>
-void Array<T, Alloc>::swap(const Array &a) {
+void Array<T, Alloc>::swap(Array &a) {
 	Algorithm::swap(buf_base, a.buf_base);
 	Algorithm::swap(buf_dend, a.buf_dend);
 	Algorithm::swap(buf_end, a.buf_end);

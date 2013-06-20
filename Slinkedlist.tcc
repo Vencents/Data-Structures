@@ -40,6 +40,25 @@ Slinkedlist<T, A>::~Slinkedlist() {
 }
 
 template <typename T, typename A>
+void Slinkedlist<T, A>::move(Slinkedlist &t) {
+	t.front = front;
+	t.back = back;
+	t.before_front.next = before_front.next;
+	t._count = _count;
+	front = 0;
+	back = 0;
+	_count = 0;
+}
+
+template <typename T, typename A>
+void Slinkedlist<T, A>::swap(Slinkedlist &t) {
+	Algorithm::swap(_count, t._count);
+	Algorithm::swap(front, t.front);
+	Algorithm::swap(back, t.back);
+	Algorithm::swap(before_front, t.before_front);
+}
+
+template <typename T, typename A>
 typename Slinkedlist<T, A>::Iterator Slinkedlist<T, A>::begin() {
 	return Slinkedlist_Iterator<T, A>(front);	
 }

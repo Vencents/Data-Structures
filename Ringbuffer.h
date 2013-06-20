@@ -31,21 +31,12 @@ protected:
 		}
 	}
 public:
-	Ringbuffer(size_t size) : c(size), front_index(), rear_index() {
-		front = typename Container::Iterator(c.begin());
-		rear = typename Container::Iterator(c.begin());
-	}
-	Ringbuffer(const Ringbuffer &r) :
-		c(r.c), front(r.front),
-		rear(r.rear), _count(),
-		front_index(r.front_index), rear_index(r.rear_index) {}
-	Ringbuffer(const Container &container) :
-		c(container), front(c.begin()),
-		rear(c.end()), _count(c.count()),
-		front_index(), rear_index(c.count())
-	{
-		--rear; --rear_index; c.resize(c.count() * 2);
-	}
+	void move(Ringbuffer &r);
+	void swap(Ringbuffer &r);
+
+	Ringbuffer(size_t size);
+	Ringbuffer(const Ringbuffer &r);
+	Ringbuffer(const Container &container);
 
 	size_t push(typename Const<ref_t>::type val);
 	value_t pop();
@@ -65,6 +56,7 @@ public:
 		front = rear = c.begin();
 		front_index = rear_index = 0;
 	}
+	
 };
 
 #include "Ringbuffer.tcc"

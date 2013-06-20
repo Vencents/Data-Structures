@@ -86,8 +86,82 @@ Linkedlist<T, Alloc>::Linkedlist() : _count(), base_node(), end_node() {
 }
 
 template <typename T, typename Alloc>
+Linkedlist<T, Alloc>::Linkedlist(size_t n) : _count(), base_node(), end_node() {
+	Linkedlist_Node<T> &node, *newnode;
+	base_node.prev = 0;
+	base_node.next = &end_node;
+	end_node.next = 0;
+	end_node.prev = &base_node;
+	for (_count = 0; _count != n; ++_count) {
+		newnode = allocator.alloc(1);
+		newnode->construct(value_t());
+		newnode->prev = end_node.prev;
+		newnode->next = &end_node;
+		newnode->prev->next = newnode;
+		end_node.prev = newnode;
+	}
+}
+
+template <typename T, typename Alloc>
+template <typename InputIter>
+Linkedlist<T, Alloc>::Linkedlist(typename Const<InputIter>::type p, size_t n) : _count(), base_node(), end_node() {
+	base_node.next = &end_node;
+	base_node.prev = 0;
+	end_node.next = 0;
+	end_node.prev = &base_node;
+	this->set(p, n);	
+}
+
+template <typename T, typename Alloc>
+Linkedlist<T, Alloc>::Linkedlist(typename Const<ptr_t>::type p, size_t n) : _count(), base_node(), end_node() {
+	base_node.next = &end_node;
+	base_node.prev = 0;
+	end_node.next = 0;
+	end_node.prev = &base_node;
+	this->set<ptr_t>(p, n);
+}
+
+template <typename T, typename Alloc>
+Linkedlist<T, Alloc>::Linkedlist(const Linkedlist &l) : _count(l._count), base_node(), end_node()  {
+	Linkedlist_Node<T> *node, *newnode;
+	base_node.prev = 0;
+	base_node.next = &end_node;
+	end_node.next = 0;
+	end_node.prev = &base_node;
+	for (node = l.base_node.next; node != &l.end_node; node = node->next) {
+		newnode = allocator.alloc(1);
+		newnode->construct(node->val);
+		newnode->prev = end_node.prev;
+		newnode->next = &end_node;
+		newnode->prev->next = newnode;
+		end_node.prev = newnode;		
+	} 
+};
+
+template <typename T, typename Alloc>
 Linkedlist<T, Alloc>::~Linkedlist() {
 	this->clear();
+}
+
+template <typename T, typename Alloc>
+void Linkedlist<T, Alloc>::move(Linkedlist &t) {
+	t.base_node.prev = base_node.prev;
+	t.base_node.next = base_node.next;
+	t.end_node.prev = end_node.prev;
+	t.end_node.next = end_node.next;
+	t._count = _count;
+	base_node.prev = 0;
+	base_node.next = &end_node;
+	end_node.prev = &base_node;	
+	end_node.next = 0;
+	_count = 0;
+}
+
+template <typename T, typename Alloc>
+void Linkedlist<T, Alloc>::swap(Linkedlist &t) {
+	Algorithm::swap(base_node, t.base_node);
+	Algorithm::swap(end_node, t.end_node);
+	Algorithm::swap(_count, t._count);
 }
 
 template <typename T, typename Alloc>
@@ -157,11 +231,17 @@ typename Linkedlist<T, Alloc>::value_t Linkedlist<T, Alloc>::last() {
 template <typename T, typename Alloc>
 void Linkedlist<T, Alloc>::clear() {
 	Linkedlist_Node<T> *node, *next;
+	if (_count == 0) return;
 	for (node = base_node.next; node != &end_node; node = next) {
 		node->destroy();
 		next = node->next;
 		allocator.free(node);
 	}
+	base_node.prev = 0;
+	base_node.next = &end_node;
+	end_node.prev = &base_node;
+	end_node.next = 0;
+	_count = 0;
 }
 
 template <typename T, typename Alloc>

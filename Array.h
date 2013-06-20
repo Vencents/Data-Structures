@@ -47,10 +47,12 @@ public:
 	Array(typename Const<ptr_t>::type p, size_t n);
 	~Array();
 
+	void move(Array &a);
+	void swap(Array &a);
+
 	template <typename InputIter>
 	void set(typename Const<InputIter>::type p, size_t n);
 	void set(typename Const<ptr_t>::type p, size_t n);
-	void swap(const Array &a);
 	inline void clear() { buf_dend = buf_base; }
 	void resize(size_t n, typename Const<ref_t>::type val = value_t());
 	void reserve(size_t n);

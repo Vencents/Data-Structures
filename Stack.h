@@ -17,30 +17,25 @@ public:
 	Stack(const Container &container) : c(container) {}
 	
 	inline void push(typename Const<ref_t>::type val)
-	{
-		c.push(val);
-	}
+		{ c.push(val); }
 
 	inline value_t	pop()
-	{
-		return c.pop();	
-	}
+		{ return c.pop(); }
 
 	inline value_t peek()
-	{
-		return c.last();
-	}
+		{ return c.last(); }
 
 	inline size_t count()
-	{
-		return c.count();
-	}
+		{ return c.count(); }
 
 	inline void clear()
-	{
-		c.clear();
-	}
-	
+		{ c.clear(); }
+
+	inline void move(Stack &s)
+		{ c.move(s.c); }
+
+	inline void swap(Stack &s)
+		{ c.swap(s.c); }	
 };
 
 

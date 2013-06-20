@@ -76,7 +76,10 @@ public:
 	Slinkedlist(typename Const<InputIter>::type p, size_t n);
 	Slinkedlist(typename Const<ptr_t>::type p, size_t n);
 	~Slinkedlist();
-	
+
+	void move(Slinkedlist &t);	
+	void swap(Slinkedlist &t);
+
 	Iterator begin();
 	Iterator end();
 	Iterator beforeBegin();
