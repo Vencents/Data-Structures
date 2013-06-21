@@ -43,11 +43,11 @@ void Hashtable<Key, Val, Hashfunc, Alloc>::remove(const key_t &k) {
 	
 	hash = hasher(k) % table.count();
 	bucket = &table[hash];
-	if (bucket.count() == 0) throw Erange();
-	end = bucket.end();
-	for (it = bucket.begin(); it != end; ++it) {
+	if (bucket->count() == 0) throw Erange();
+	end = bucket->end();
+	for (it = bucket->begin(); it != end; ++it) {
 		if (it->key == k) {
-			bucket.remove(it - bucket.begin(), 1);
+			bucket->remove(it - bucket->begin(), 1);
 			break;
 		}
 	}		
@@ -61,9 +61,9 @@ bool Hashtable<Key, Val, Hashfunc, Alloc>::exists(const key_t &k) {
 
 	hash = hasher(k) % table.count();
 	bucket = &table[hash];
-	if (bucket.count() == 0) return false;
-	end = bucket.end();
-	for (it = bucket.begin(); it != end; ++it) {
+	if (bucket->count() == 0) return false;
+	end = bucket->end();
+	for (it = bucket->begin(); it != end; ++it) {
 		if (it->key == k) return true;
 	}
 	return false;
