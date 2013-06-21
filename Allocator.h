@@ -42,20 +42,20 @@ public:
 	void free(ptr_t p) {
 		allocator.free(p);
 	}
-	
+
+	static inline void construct(ptr_t p)
+		{ new ((void*)p)value_t(); }		
 	static inline void construct(ptr_t p, typename Const<ref_t>::type t)
 		{ new ((void*)p)value_t(t); }
 	static inline void destroy(ptr_t p)
 		{ ((value_t*)p)->~value_t(); }
-	static inline void reconstruct(ptr_t p, typename Const<ref_t>::type t)
-		{ destroy(p); construct(p, t); }
 
-	static inline void construct(ptr_t p, typename Const<ref_t>::type t, size_t n)
+	static inline void construct_range(ptr_t p, size_t n)
+		{ for (size_t i = 0; i < n; ++i, ++p) construct(p); }
+	static inline void construct_range(ptr_t p, typename Const<ref_t>::type t, size_t n)
 		{ for (size_t i = 0; i < n; ++i, ++p) construct(p, t); }
-	static inline void destroy(ptr_t p, size_t n)
+	static inline void destroy_range(ptr_t p, size_t n)
 		{ for (size_t i = 0; i < n; ++i, ++p) destroy(p); }
-	static inline void reconstruct(ptr_t p, typename Const<ref_t>::type t, size_t n)
-		{ for (size_t i = 0; i < n; ++i, ++p) reconstruct(p, t); }
 };
 
 #endif 

@@ -94,7 +94,7 @@ Linkedlist<T, Alloc>::Linkedlist(size_t n) : _count(), base_node(), end_node() {
 	end_node.prev = &base_node;
 	for (_count = 0; _count != n; ++_count) {
 		newnode = allocator.alloc(1);
-		newnode->construct(value_t());
+		newnode->construct();
 		newnode->prev = end_node.prev;
 		newnode->next = &end_node;
 		newnode->prev->next = newnode;
@@ -145,11 +145,19 @@ Linkedlist<T, Alloc>::~Linkedlist() {
 
 template <typename T, typename Alloc>
 void Linkedlist<T, Alloc>::move(Linkedlist &t) {
-	t.base_node.prev = base_node.prev;
-	t.base_node.next = base_node.next;
-	t.end_node.prev = end_node.prev;
-	t.end_node.next = end_node.next;
+	if (t.count()) t.clear();
+	t.base_node.prev = 0;
+	t.end_node.next = 0;
 	t._count = _count;
+	if (_count == 0) {
+		t.base_node.next = &t.end_node;
+		t.end_node.prev = &t.base_node;
+	} else {
+		t.base_node.next = base_node.next;
+		t.base_node.next->prev = &t.base_node;
+		t.end_node.prev = end_node.prev;
+		t.end_node.prev->next = &t.end_node;
+	}
 	base_node.prev = 0;
 	base_node.next = &end_node;
 	end_node.prev = &base_node;	

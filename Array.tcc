@@ -1,5 +1,10 @@
 template <typename T, typename Alloc>
 void Array<T, Alloc>::move(Array &a) {
+	if (a.buf_base != ptr_t()) {
+		allocator.destroy_range(a.buf_base, a.buf_dend - a.buf_base);
+		allocator.free(a.buf_base);
+		a.buf_base = ptr_t();
+	}
 	a.buf_base = buf_base;
 	a.buf_dend = buf_dend;
 	a.buf_end = buf_end;
@@ -31,7 +36,7 @@ void Array<T, Alloc>::swap(Array &a) {
 template <typename T, typename Alloc>
 Array<T, Alloc>::Array(size_t n) : allocator(), buf_base(), buf_dend(), buf_end() {
 	buf_base = allocator.alloc(n);
-	allocator.construct(buf_base, value_t(), n);
+	allocator.construct_range(buf_base, n);
 	buf_dend = buf_base + n;
 	buf_end = buf_dend;
 }
@@ -63,7 +68,7 @@ Array<T, Alloc>::Array(typename Const<ptr_t>::type p, size_t n) : allocator(), b
 template <typename T, typename Alloc>
 Array<T, Alloc>::~Array() {
 	if (buf_base != ptr_t()) {
-		allocator.destroy(buf_base, buf_dend - buf_base);
+		allocator.destroy_range(buf_base, buf_dend - buf_base);
 		allocator.free(buf_base);
 	}
 }
@@ -93,7 +98,7 @@ void Array<T, Alloc>::set(typename Const<InputIter>::type p, size_t n) {
 		old_dend = buf_dend;
 		buf_dend = buf_base + n;	
 		if (buf_dend < old_dend) {
-			allocator.destroy(buf_dend, old_dend - buf_dend);
+			allocator.destroy_range(buf_dend, old_dend - buf_dend);
 		}
 	}
 }
@@ -155,16 +160,16 @@ Array<T, Alloc>& Array<T, Alloc>::operator = (const Array &a) {
 template <typename T, typename Alloc>
 typename Array<T, Alloc>::ref_t Array<T, Alloc>::operator [](ssize_t i) {
 	if (this->count() == 0) throw Enodata();
-	if ((i > 0 ? i : -i) >= buf_dend - buf_base) throw Erange();
-	if (i < 0) return *(buf_dend - i);
+	if ((i > 0 ? i : -i - 1) >= buf_dend - buf_base) throw Erange();
+	if (i < 0) return *(buf_dend + i);
 	return buf_base[i];	
 }
 
 template <typename T, typename Alloc>
 typename Const<typename Array<T, Alloc>::ref_t>::type Array<T, Alloc>::operator [](ssize_t i) const {
 	if (this->count() == 0) throw Enodata();
-	if ((i > 0 ? i : -i) >= buf_dend - buf_base) throw Erange();
-	if (i < 0) return *(buf_dend - i);
+	if ((i > 0 ? i : -i - 1) >= buf_dend - buf_base) throw Erange();
+	if (i < 0) return *(buf_dend + i);
 	return buf_base[i];
 }
 
@@ -212,7 +217,7 @@ void Array<T, Alloc>::remove(ssize_t index, size_t n) {
 	else p = buf_base + index + n;
 	if (p < buf_dend) Algorithm::move(p - n, p, buf_dend - p);
 	buf_dend -= n;
-	allocator.destroy(buf_dend, n);
+	allocator.destroy_range(buf_dend, n);
 }
 
 template <typename T, typename Alloc>
@@ -263,7 +268,7 @@ void Array<T, Alloc>::fill(ssize_t start, size_t n, typename Const<ref_t>::type 
 	src = buf_dend - 1;
 	dst = buf_dend + n - 1;
 	if (insert_point == buf_dend) {
-		allocator.construct(buf_dend, val, n);
+		allocator.construct_range(buf_dend, val, n);
 		buf_dend += n;
 		return;
 	}

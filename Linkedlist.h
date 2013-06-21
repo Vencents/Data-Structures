@@ -22,6 +22,8 @@ public:
 		val(n.val), prev(n.prev), next(n.next) {}
 	Linkedlist_Node &operator =(const Linkedlist_Node &n)
 		{ val = value_t(n.val); prev = n.prev; next = n.next; return *this; }
+	inline void construct()
+		{ new ((void*)&val)value_t(); }
 	inline void construct(typename Const<ref_t>::type v)
 		{ new ((void*)&val)value_t(v); }
 	inline void destroy()
