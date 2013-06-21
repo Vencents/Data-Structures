@@ -31,6 +31,7 @@ typename Hashtable<Key, Val, Hashfunc, Alloc>::value_t &Hashtable<Key, Val, Hash
 	}
 	newpair.key = k;
 	bucket->push(newpair);
+	++_count;
 	return bucket->operator [](-1).value;
 }
 
@@ -48,6 +49,7 @@ void Hashtable<Key, Val, Hashfunc, Alloc>::remove(const key_t &k) {
 	for (it = bucket->begin(); it != end; ++it) {
 		if (it->key == k) {
 			bucket->remove(it - bucket->begin(), 1);
+			--_count;
 			break;
 		}
 	}		
@@ -77,5 +79,6 @@ void Hashtable<Key, Val, Hashfunc, Alloc>::clear() {
 		it->clear();
 	}
 	table.clear();
+	_count = 0;
 }
 
