@@ -19,11 +19,12 @@ typename Hashtable<Key, Val, Hashfunc, Alloc>::value_t &Hashtable<Key, Val, Hash
 	pair_t newpair;
 	bucket_t *bucket;
 	typename bucket_t::Iterator it, end;
-	size_t hash;
+	size_t hash, size;
 
 	hash = hasher(k) % table.count();
-	if ((long double)_count / table.count() >= 0.77)
-		rehash(table.count() * 2);
+	size = table.count();
+	if ((long double)_count / size >= 0.77)
+		rehash(size  * 2);
 	bucket = &table[hash];
 	end = bucket->end();
 	for (it = bucket->begin(); it != end; ++it) {
@@ -78,7 +79,6 @@ void Hashtable<Key, Val, Hashfunc, Alloc>::clear() {
 	for (it = table.begin(); it != end; ++it) {
 		it->clear();
 	}
-	table.clear();
 	_count = 0;
 }
 
