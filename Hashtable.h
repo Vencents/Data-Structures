@@ -97,7 +97,7 @@ protected:
 	
 	void rehash(size_t newtablesize);
 public:
-	Hashtable() : hasher(), _count(), table(4) {}
+	Hashtable() : hasher(), _count(), table(5) {}
 	~Hashtable() {}
 
 	value_t &operator [] (const key_t &k);

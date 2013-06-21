@@ -22,8 +22,8 @@ typename Hashtable<Key, Val, Hashfunc, Alloc>::value_t &Hashtable<Key, Val, Hash
 	size_t hash;
 
 	hash = hasher(k) % table.count();
-	if (_count ? table.count() / _count < 3 : 0)
-		rehash(table.count() * 3);
+	if ((long double)_count / table.count() > 0.8)
+		rehash(table.count() * 2);
 	bucket = &table[hash];
 	end = bucket->end();
 	for (it = bucket->begin(); it != end; ++it) {
