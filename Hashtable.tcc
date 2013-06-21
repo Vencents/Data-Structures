@@ -22,7 +22,7 @@ typename Hashtable<Key, Val, Hashfunc, Alloc>::value_t &Hashtable<Key, Val, Hash
 	size_t hash;
 
 	hash = hasher(k) % table.count();
-	if ((long double)_count / table.count() > 0.8)
+	if ((long double)_count / table.count() >= 0.77)
 		rehash(table.count() * 2);
 	bucket = &table[hash];
 	end = bucket->end();
