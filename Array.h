@@ -70,10 +70,20 @@ public:
 	value_t shift();
 	size_t unshift(typename Const<ref_t>::type val);
 	size_t insert(ssize_t index, typename Const<ref_t>::type val);
+	size_t insert(Iterator pos, typename Const<ref_t>::type val)
+		{ return this->insert(pos - buf_base, val); }
 	void remove(ssize_t index, size_t count);
-	Array slice(ssize_t start, ssize_t length) const;
+	void remove(Iterator pos, size_t count)
+		{ return this->remove(pos - buf_base, count); }
+	Array slice(ssize_t start, size_t length) const;
+	Array slice(Iterator pos, size_t length) const
+		{ return this->slice(pos - buf_base, length); }
 	Array splice(ssize_t start, size_t length, const Array &a) const;
+	Array splice(Iterator pos, size_t length, const Array &a) const
+		{ return this->splice(pos - buf_base, length, a); }
 	void fill(ssize_t start, size_t count, typename Const<ref_t>::type val);
+	void fill(Iterator pos, size_t count, typename Const<ref_t>::type val)
+		{ this->fill(pos - buf_base, count, val); }
 //
 	ssize_t find(typename Const<ref_t>::type val) const;
 	ssize_t rfind(typename Const<ref_t>::type val) const;

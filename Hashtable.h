@@ -86,7 +86,7 @@ public:
 	typedef Key				key_t;
 	typedef Val				value_t;
 	typedef Hashtable_Pair<key_t, value_t>	pair_t;
-
+	//typedef Hashtable_Iterator<pair_t>	Iterator;
 protected:
 	typedef Array<pair_t, Alloc>		bucket_t;
 	typedef Array<bucket_t, Alloc>		table_t;
@@ -98,7 +98,10 @@ protected:
 	void rehash(size_t newtablesize);
 public:
 	Hashtable() : hasher(), _count(), table(5) {}
+	Hashtable(const Hashtable &h);
 	~Hashtable() {}
+
+	Hashtable &operator =(const Hashtable &t);
 
 	value_t &operator [] (const key_t &k);
 	const value_t &operator [] (const key_t &k) const;
@@ -108,8 +111,24 @@ public:
 
 	void clear();
 	inline size_t count() { return _count; }
-	
-	
+
+	void move(Hashtable &h);
+	void swap(Hashtable &h);
+
+	//Iterator begin();
+	//Iterator end();
+	/*
+	typename Const<Iterator>::type begin() const;
+	typename Const<Iterator>::type end() const;
+
+	Iterator remove(Iterator pos, size_t n = 1);
+
+	Iterator from(const key_t &k);
+	typename Const<Iterator>::type from(const key_t &k) const;
+
+	Iterator find(const value_t &v);
+	typename Const<Iterator>::type find(const value_t &v) const;
+	*/	
 };
 
 #include "Hashtable.tcc"

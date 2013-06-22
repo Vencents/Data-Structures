@@ -86,8 +86,18 @@ Linkedlist<T, Alloc>::Linkedlist() : _count(), base_node(), end_node() {
 }
 
 template <typename T, typename Alloc>
+template <size_t N>
+Linkedlist<T, Alloc>::Linkedlist(const value_t (&lst)[N]) : _count(), base_node(), end_node() {
+	base_node.prev = 0;
+	base_node.next = &end_node;
+	end_node.next = 0;
+	end_node.prev = &base_node;
+	this->set<ptr_t>(lst, N);
+}
+
+template <typename T, typename Alloc>
 Linkedlist<T, Alloc>::Linkedlist(size_t n) : _count(), base_node(), end_node() {
-	Linkedlist_Node<T> &node, *newnode;
+	Linkedlist_Node<T> *newnode;
 	base_node.prev = 0;
 	base_node.next = &end_node;
 	end_node.next = 0;

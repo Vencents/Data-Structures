@@ -221,7 +221,7 @@ void Array<T, Alloc>::remove(ssize_t index, size_t n) {
 }
 
 template <typename T, typename Alloc>
-Array<T, Alloc> Array<T, Alloc>::slice(ssize_t start, ssize_t length) const {
+Array<T, Alloc> Array<T, Alloc>::slice(ssize_t start, size_t length) const {
 	size_t c, real_start;
 	c = this->count();
 	if (buf_base + end >= buf_dend) throw Erange();

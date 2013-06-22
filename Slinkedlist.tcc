@@ -35,6 +35,12 @@ Slinkedlist<T, A>::Slinkedlist(typename Const<ptr_t>::type p, size_t n) :
 }
 
 template <typename T, typename A>
+template <size_t N>
+Slinkedlist<T, A>::Slinkedlist(const value_t (&lst)[N]) : front(), back(), _count(), allocator() {
+	this->set<ptr_t>(lst, N);
+}
+
+template <typename T, typename A>
 Slinkedlist<T, A>::~Slinkedlist() {
 	this->clear();
 }

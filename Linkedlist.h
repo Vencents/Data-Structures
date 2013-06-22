@@ -78,6 +78,8 @@ public:
 	Linkedlist();
 	Linkedlist(const Linkedlist &l);
 	Linkedlist(size_t n);
+	template <size_t N>
+	Linkedlist(const value_t (&lst)[N]);
 	template <typename InputIter>
 	Linkedlist(typename Const<InputIter>::type p, size_t n);
 	Linkedlist(typename Const<ptr_t>::type p, size_t n);
@@ -98,6 +100,8 @@ public:
 	template <typename InputIter>
 	void set(typename Const<InputIter>::type p, size_t n);
 	void set(typename Const<ptr_t>::type p, size_t n);
+	Linkedlist &operator =(const Linkedlist &t)
+		{ this->set<Iterator>(t.begin(), t.count()); return *this; }
 	void swap(const Linkedlist &l);
 	void clear();
 	void resize(size_t n, typename Const<ref_t>::type val = value_t());

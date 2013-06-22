@@ -2,13 +2,17 @@ template <typename Key, typename Val, typename Hashfunc, typename Alloc>
 void Hashtable<Key, Val, Hashfunc, Alloc>::rehash(size_t newtablesize) {
 	table_t newtable(newtablesize);
 	typename table_t::Iterator it, end;
+	typename bucket_t::Iterator b_it, b_end;
 	size_t hash;
 
 	end = table.end();
 	for (it = table.begin(); it != end; ++it) {
 		if (it->count()) {
-			hash = hasher(it->operator [](0).key) % newtablesize;
-			it->move(newtable[hash]);
+			b_end = it->end();
+			for (b_it = it->begin(); b_it != b_end; ++b_it) {
+				hash = hasher(b_it->key) % newtablesize;
+				newtable[hash].push(*b_it);
+			}
 		}
 	}
 	newtable.move(table);
@@ -21,10 +25,10 @@ typename Hashtable<Key, Val, Hashfunc, Alloc>::value_t &Hashtable<Key, Val, Hash
 	typename bucket_t::Iterator it, end;
 	size_t hash, size;
 
-	hash = hasher(k) % table.count();
 	size = table.count();
 	if ((long double)_count / size >= 0.77)
-		rehash(size  * 2);
+		rehash(size * 2);
+	hash = hasher(k) % table.count();
 	bucket = &table[hash];
 	end = bucket->end();
 	for (it = bucket->begin(); it != end; ++it) {
@@ -80,5 +84,20 @@ void Hashtable<Key, Val, Hashfunc, Alloc>::clear() {
 		it->clear();
 	}
 	_count = 0;
+}
+
+template <typename Key, typename Val, typename Hashfunc, typename Alloc>
+void Hashtable<Key, Val, Hashfunc, Alloc>::move(Hashtable &h) {
+	table.move(h.table);
+	h._count = _count;	
+}
+
+template <typename Key, typename Val, typename Hashfunc, typename Alloc>
+void Hashtable<Key, Val, Hashfunc, Alloc>::swap(Hashtable &h) {
+	table_t tmp;
+	table.move(tmp);
+	h.table.move(table);
+	tmp.move(h.table);
+	Algorithm::swap(_count, h._count);
 }
 

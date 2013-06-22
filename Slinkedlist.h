@@ -41,7 +41,7 @@ public:
 	Slinkedlist_Iterator() : curr() {}
 	Slinkedlist_Iterator(const Slinkedlist_Iterator &i) : curr(i.curr) {}
 	Slinkedlist_Iterator(Slinkedlist_Node<T> * const node) : curr(node) {}
-	
+		
 	ref_t operator * () { return curr->val; }
 	const ref_t operator * () const { return curr->val; }
 	ptr_t operator -> () { return &curr->val; }
@@ -72,6 +72,8 @@ public:
 		front(l.front), back(l.back),
 		_count(l.count), allocator() {}
 	Slinkedlist(size_t n, typename Const<ref_t>::type val = value_t());
+	template <size_t N>
+	Slinkedlist(const value_t (&lst)[N]);
 	template <typename InputIter>
 	Slinkedlist(typename Const<InputIter>::type p, size_t n);
 	Slinkedlist(typename Const<ptr_t>::type p, size_t n);
