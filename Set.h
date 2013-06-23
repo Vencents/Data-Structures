@@ -2,7 +2,6 @@
 #define SET_H
 
 #include "Hashtable.h"
-#include <stdarg.h>
 
 template <typename T>
 class Set;
@@ -11,7 +10,7 @@ template <typename T>
 class Set_Iterator {
 	friend class Set<T>;
 protected:
-	mutable typename Hashtable<T, T>::Iterator it;
+	mutable typename Hashtable<T, char>::Iterator it;
 public:
 	typedef T	value_t;
 	typedef T	*ptr_t;
@@ -19,7 +18,7 @@ public:
 
 	Set_Iterator() : it() {}
 	Set_Iterator(const Set_Iterator &i) : it(i.it) {}
-	Set_Iterator(typename Const<typename Hashtable<T, T>::Iterator>::type i) : it(i) {}
+	Set_Iterator(typename Const<typename Hashtable<T, char>::Iterator>::type i) : it(i) {}
 
 	const Set_Iterator &operator =(const Set_Iterator &i) const { it = i.it; return *this; }
 	
@@ -47,7 +46,7 @@ public:
 template <typename T>
 class Set {
 protected:
-	mutable Hashtable<T, T> c;
+	mutable Hashtable<T, char> c;
 public:
 	typedef T	value_t;
 	typedef T	*ptr_t;
