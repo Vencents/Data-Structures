@@ -1,10 +1,10 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
-#include "Array.h"
+#include "Linkedlist.h"
 #include "Types.h"
 
-template <typename T, typename Container = Array<T> >
+template <typename T, typename Container = Linkedlist<T> >
 class Queue {
 protected:
 	Container c;
