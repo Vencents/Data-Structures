@@ -41,7 +41,10 @@ public:
 	Slinkedlist_Iterator() : curr() {}
 	Slinkedlist_Iterator(const Slinkedlist_Iterator &i) : curr(i.curr) {}
 	Slinkedlist_Iterator(Slinkedlist_Node<T> * const node) : curr(node) {}
-		
+	
+	const Slinkedlist_Iterator &operator =(const Slinkedlist_Iterator &s) const
+		{ curr = s.curr; return *this; }
+	
 	ref_t operator * () { return curr->val; }
 	const ref_t operator * () const { return curr->val; }
 	ptr_t operator -> () { return &curr->val; }

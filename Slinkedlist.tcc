@@ -69,6 +69,12 @@ typename Slinkedlist<T, A>::Iterator Slinkedlist<T, A>::begin() {
 	return Slinkedlist_Iterator<T, A>(front);	
 }
 
+
+template <typename T, typename A>
+typename Const<typename Slinkedlist<T, A>::Iterator>::type Slinkedlist<T, A>::begin() const {
+	return Slinkedlist_Iterator<T, A>(front);	
+}
+
 template <typename T, typename A>
 typename Slinkedlist<T, A>::Iterator Slinkedlist<T, A>::beforeBegin() {
 	before_front.next = front;
@@ -76,12 +82,29 @@ typename Slinkedlist<T, A>::Iterator Slinkedlist<T, A>::beforeBegin() {
 }
 
 template <typename T, typename A>
+typename Const<typename Slinkedlist<T, A>::Iterator>::type Slinkedlist<T, A>::beforeBegin() const {
+	before_front.next = front;
+	return Slinkedlist_Iterator<T, A>(&before_front);
+}
+
+
+template <typename T, typename A>
 typename Slinkedlist<T, A>::Iterator Slinkedlist<T, A>::end() {
 	return Slinkedlist_Iterator<T, A>(0);
 }
 
 template <typename T, typename A>
+typename Const<typename Slinkedlist<T, A>::Iterator>::type Slinkedlist<T, A>::end() const {
+	return Slinkedlist_Iterator<T, A>(0);
+}
+
+template <typename T, typename A>
 typename Slinkedlist<T, A>::Iterator Slinkedlist<T, A>::beforeEnd() {
+	return Slinkedlist_Iterator<T, A>(back);
+}
+
+template <typename T, typename A>
+typename Const<typename Slinkedlist<T, A>::Iterator>::type Slinkedlist<T, A>::beforeEnd() const {
 	return Slinkedlist_Iterator<T, A>(back);
 }
 

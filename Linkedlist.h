@@ -48,6 +48,9 @@ public:
 	Linkedlist_Iterator(const Linkedlist_Iterator &i) : curr(i.curr) {}
 	Linkedlist_Iterator(Linkedlist_Node<Type> * const node) : curr(node) {}
 
+	const Linkedlist_Iterator &operator = (const Linkedlist_Iterator &t) const
+		{ curr = t.curr; return *this; }
+
 	ref_t operator * () { return curr->val; }
 	const ref_t operator * () const { return curr->val; }
 	ptr_t operator -> () { return &curr->val; }
