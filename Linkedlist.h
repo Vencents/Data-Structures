@@ -105,7 +105,6 @@ public:
 	void set(typename Const<ptr_t>::type p, size_t n);
 	Linkedlist &operator =(const Linkedlist &t)
 		{ this->set<Iterator>(t.begin(), t.count()); return *this; }
-	void swap(const Linkedlist &l);
 	void clear();
 	void resize(size_t n, typename Const<ref_t>::type val = value_t());
 	size_t count() const { return _count; }

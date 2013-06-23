@@ -133,14 +133,6 @@ void Slinkedlist<T, A>::set(typename Const<ptr_t>::type p, size_t n) {
 	this->set<ptr_t>(p, n);
 }
 
-template <typename T, typename A>
-void Slinkedlist<T, A>::swap(const Slinkedlist &l) {
-	Algorithm::swap(front, l.front);
-	Algorithm::swap(back, l.back);
-	Algorithm::swap(_count, l._count);
-}
-
-template <typename T, typename A>
 void Slinkedlist<T, A>::clear() {
 	Slinkedlist_Node<T> *node;
 	for (node = front; node != 0; node = node->next) {

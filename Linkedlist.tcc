@@ -334,13 +334,6 @@ void Linkedlist<T, Alloc>::fill(Iterator pos, size_t n, typename Const<ref_t>::t
 }
 
 template <typename T, typename Alloc>
-void Linkedlist<T, Alloc>::swap(const Linkedlist &t) {
-	Algorithm::swap(base_node, t.base_node);
-	Algorithm::swap(end_node, t.end_node);
-	Algorithm::swap(_count, t._count);		
-}
-
-template <typename T, typename Alloc>
 template <typename InputIter>
 void Linkedlist<T, Alloc>::set(typename Const<InputIter>::type p, size_t n) {
 	Linkedlist_Node<T> *node, *tmp;

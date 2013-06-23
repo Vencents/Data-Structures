@@ -97,7 +97,6 @@ public:
 	template <typename InputIter>
 	void set(typename Const<InputIter>::type p, size_t n);
 	void set(typename Const<ptr_t>::type p, size_t n);	
-	void swap(const Slinkedlist &l);
 	void clear();
 	void resize(size_t n, typename Const<ref_t>::type val = value_t());
 	size_t count() const { return _count; }
