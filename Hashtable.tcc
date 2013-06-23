@@ -40,6 +40,22 @@ typename Hashtable<Key, Val, Hashfunc, Alloc>::value_t &Hashtable<Key, Val, Hash
 }
 
 template <typename Key, typename Val, typename Hashfunc, typename Alloc>
+typename Const<typename Hashtable<Key, Val, Hashfunc, Alloc>::ref_value_t>::type
+Hashtable<Key, Val, Hashfunc, Alloc>::operator [] (const key_t &k) const {
+	const bucket_t *bucket;
+	typename Const<typename bucket_t::Iterator>::type it, end;
+	size_t hash, size;
+	size = table.count();
+	hash = hasher(k) % size;
+	bucket = &table[hash];
+	end = bucket->end();
+	for (it = bucket->begin(); it != end; ++it) {
+		if (it->key == k) return it->value;
+	}
+	throw Erange();	
+}
+
+template <typename Key, typename Val, typename Hashfunc, typename Alloc>
 typename Hashtable<Key, Val, Hashfunc, Alloc>::Iterator Hashtable<Key, Val, Hashfunc, Alloc>::from(const key_t &k) {
 	size_t hash, bpos = 0;
 	bucket_t *bucket;

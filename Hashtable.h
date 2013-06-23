@@ -147,10 +147,11 @@ public:
 	typedef Val				value_t;
 	typedef Hashtable_Pair<Key, Val>	pair_t;
 	typedef Hashtable_Iterator<Key, Val, Hashfunc, Alloc>	Iterator;
+	typedef	value_t				&ref_value_t;
 protected:
 	typedef Array<pair_t, Alloc>		bucket_t;
 	typedef Array<bucket_t, Alloc>		table_t;
-	
+
 	table_t table;
 	Hashfunc hasher;
 	size_t _count;
@@ -165,7 +166,7 @@ public:
 		{ table = t.table; _count = t._count; }
 
 	value_t &operator [] (const key_t &k);
-	const value_t &operator [] (const key_t &k) const;
+	typename Const<ref_value_t>::type operator [] (const key_t &k) const;
 	
 	void remove(const key_t &k);
 	bool contains(const key_t &k) const;
