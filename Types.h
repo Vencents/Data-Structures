@@ -14,9 +14,9 @@
  *	Set { baz = new_value; }
  * }
  */
-#define Property(T) class { private: typedef T value_t; T value; public: void _()  
-#define Get } operator value_t () 
-#define Set void operator = (const value_t &new_value)
+//#define Property(T) class { private: typedef T value_t; T value; public: void _()  
+//#define Get } operator value_t () 
+//#define Set void operator = (const value_t &new_value)
  
 template <typename T>
 struct Unreference { typedef T type; };

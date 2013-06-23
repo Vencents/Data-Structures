@@ -235,13 +235,13 @@ typename Linkedlist<T, Alloc>::value_t Linkedlist<T, Alloc>::shift() {
 }
 
 template <typename T, typename Alloc>
-typename Linkedlist<T, Alloc>::value_t Linkedlist<T, Alloc>::first() {
+typename Linkedlist<T, Alloc>::value_t Linkedlist<T, Alloc>::first() const {
 	if (base_node.next == &end_node) throw Enodata();
 	return base_node.next->val;
 }
 
 template <typename T, typename Alloc>
-typename Linkedlist<T, Alloc>::value_t Linkedlist<T, Alloc>::last() {
+typename Linkedlist<T, Alloc>::value_t Linkedlist<T, Alloc>::last() const {
 	if (end_node.prev == &base_node) throw Enodata();
 	return end_node.prev->val;
 }

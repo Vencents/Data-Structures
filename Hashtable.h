@@ -161,16 +161,17 @@ public:
 	Hashtable(const Hashtable &h);
 	~Hashtable() {}
 
-	Hashtable &operator =(const Hashtable &t);
+	Hashtable &operator =(const Hashtable &t)
+		{ table = t.table; _count = t._count; }
 
 	value_t &operator [] (const key_t &k);
 	const value_t &operator [] (const key_t &k) const;
 	
 	void remove(const key_t &k);
-	bool exists(const key_t &k);
+	bool contains(const key_t &k) const;
 
 	void clear();
-	inline size_t count() { return _count; }
+	inline size_t count() const { return _count; }
 
 	void move(Hashtable &h);
 	void swap(Hashtable &h);

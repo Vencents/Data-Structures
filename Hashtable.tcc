@@ -91,10 +91,10 @@ void Hashtable<Key, Val, Hashfunc, Alloc>::remove(const key_t &k) {
 }
 
 template <typename Key, typename Val, typename Hashfunc, typename Alloc>
-bool Hashtable<Key, Val, Hashfunc, Alloc>::exists(const key_t &k) {
+bool Hashtable<Key, Val, Hashfunc, Alloc>::contains(const key_t &k) const {
 	size_t hash;
-	bucket_t *bucket;
-	typename bucket_t::Iterator it, end;
+	typename Const<bucket_t *>::type bucket;
+	typename Const<typename bucket_t::Iterator>::type it, end;
 
 	hash = hasher(k) % table.count();
 	bucket = &table[hash];
