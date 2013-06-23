@@ -71,22 +71,82 @@ template <typename Key, typename Val>
 class Hashtable_Pair {
 public:
 	Key	key;
-	Val	value;
+	Val		value;
 
 	Hashtable_Pair() : key(), value() {}
+	Hashtable_Pair(const Key &k) : key(k), value() {}
 	Hashtable_Pair(const Hashtable_Pair &p) : key(p.key), value(p.value) {}
 	~Hashtable_Pair() {}
 	Hashtable_Pair &operator =(const Hashtable_Pair &p)
 		{ key = p.key; value = p.value; return *this; }
+	
 };
+
+template <typename Key, typename Val, typename Hashfunc, typename Alloc>
+class Hashtable;
+
+template <typename Key, typename Val, typename Hashfunc, typename Alloc>
+class Hashtable_Iterator {
+	friend class Hashtable<Key, Val, Hashfunc, Alloc>;
+public:
+	typedef Key				key_t;
+	typedef Val				value_t;
+	typedef Hashtable_Pair<key_t, value_t>	pair_t;
+protected:
+	typedef Array<pair_t, Alloc>		bucket_t;
+	typedef Array<bucket_t, Alloc>		table_t;
+	
+	mutable table_t *table;
+	mutable size_t tpos, bpos;
+public:
+	Hashtable_Iterator() : tpos(), bpos(), table() {}
+	Hashtable_Iterator(table_t &tbl, size_t t, size_t b) : tpos(t), bpos(b), table(&tbl) {}
+	Hashtable_Iterator(const Hashtable_Iterator &h) : tpos(h.tpos), bpos(h.bpos), table(h.table) {}
+
+	Hashtable_Iterator &operator =(const Hashtable_Iterator &h) {
+		table = h.table; tpos = h.tpos; bpos = h.bpos;
+		return *this;
+	}
+	
+	pair_t &operator * () { return table->operator [](tpos)[bpos]; }
+	const pair_t &operator * () const { return table->operator [](tpos)[bpos]; }	
+	
+	pair_t *operator -> () { return &table->operator [](tpos)[bpos]; }
+	const pair_t *operator -> () const { return &table->operator [](tpos)[bpos]; }
+	
+	const Hashtable_Iterator &operator ++ () const;
+	const Hashtable_Iterator &operator -- () const;
+
+	const Hashtable_Iterator operator ++ (int) const {
+		Hashtable_Iterator tmp(*this);
+		this->operator ++();
+		return tmp;
+	}
+
+	const Hashtable_Iterator operator -- (int) const {
+		Hashtable_Iterator tmp(*this);
+		this->operator --();
+		return tmp;
+	}
+
+	bool operator == (const Hashtable_Iterator &i) const {
+		return table == i.table && tpos == i.tpos && bpos == i.bpos;
+	}
+
+	bool operator != (const Hashtable_Iterator &i) const {
+		return bpos != i.bpos || tpos != i.tpos || table != i.table;
+	}
+
+};
+
 
 template <typename Key, typename Val, typename Hashfunc = Hash<Key>, typename Alloc = Allocator>
 class Hashtable {
 public:
 	typedef Key				key_t;
 	typedef Val				value_t;
-	typedef Hashtable_Pair<key_t, value_t>	pair_t;
-	//typedef Hashtable_Iterator<pair_t>	Iterator;
+	typedef Hashtable_Pair<Key, Val>	pair_t;
+	typedef Hashtable_Iterator<Key, Val, Hashfunc, Alloc>	Iterator;
 protected:
 	typedef Array<pair_t, Alloc>		bucket_t;
 	typedef Array<bucket_t, Alloc>		table_t;
@@ -97,7 +157,7 @@ protected:
 	
 	void rehash(size_t newtablesize);
 public:
-	Hashtable() : hasher(), _count(), table(5) {}
+	Hashtable() : hasher(), _count(), table(9) {}
 	Hashtable(const Hashtable &h);
 	~Hashtable() {}
 
@@ -115,20 +175,16 @@ public:
 	void move(Hashtable &h);
 	void swap(Hashtable &h);
 
-	//Iterator begin();
-	//Iterator end();
-	/*
+	Iterator begin();
+	Iterator end();
 	typename Const<Iterator>::type begin() const;
 	typename Const<Iterator>::type end() const;
 
 	Iterator remove(Iterator pos, size_t n = 1);
-
+	
 	Iterator from(const key_t &k);
 	typename Const<Iterator>::type from(const key_t &k) const;
 
-	Iterator find(const value_t &v);
-	typename Const<Iterator>::type find(const value_t &v) const;
-	*/	
 };
 
 #include "Hashtable.tcc"
