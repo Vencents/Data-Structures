@@ -54,79 +54,46 @@ public:
 	typedef Set_Iterator<T>	Iterator;
 
 	template <typename InputIter>
-	void set(typename Const<InputIter>::type p, size_t n) {
-		c.clear();
-		for (size_t i = 0; i < n; ++i, ++p) c[*p];
-	}
-	void set(typename Const<ptr_t>::type p, size_t n)
-		{ this->set<ptr_t>(p, n); }
+	void set(typename Const<InputIter>::type p, size_t n);
+	void set(typename Const<ptr_t>::type p, size_t n);
 
 	Set() : c() {}
 	Set(const Set &s) : c(s.c) {}
 	template <size_t N>
-	Set(const value_t (&lst)[N]) : c()
-		{ this->set<ptr_t>((ptr_t)lst, N); }
-	Set(typename Const<ptr_t>::type p, size_t n) : c()
-		{ this->set<ptr_t>(p, n); }
+	Set(const value_t (&lst)[N]);
+	Set(typename Const<ptr_t>::type p, size_t n);
 		
 	
-	Set &operator = (const Set &s)
-		{ c = s.c; return *this; }
+	Set &operator = (const Set &s);
 
-	Iterator begin() { return Iterator(c.begin()); }
-	Iterator end() { return Iterator(c.end()); }
-	typename Const<Iterator>::type begin() const { return Iterator(c.begin()); }
-	typename Const<Iterator>::type end() const { return Iterator(c.end()); }
+	Iterator begin();
+	Iterator end(); 
+	typename Const<Iterator>::type begin() const;
+	typename Const<Iterator>::type end() const; 
 		
-	bool contains(typename Const<ref_t>::type val) const
-		{ return c.contains(val); }
-	bool contains(const Set &s) const {
-		Iterator it, end = s.end();
-		for (it = s.begin(); it != end; ++it)
-			if (!c.contains(it.it->key)) { return false; }
-		return true;
-	}
+	bool contains(typename Const<ref_t>::type val) const;
+	bool contains(const Set &s) const;
 	
-	void insert(typename Const<ref_t>::type val)
-		{ c[val]; }
-	void insert(const Set &s) {
-		Iterator it, end = s.end();
-		for (it = s.begin(); it != end; ++it)
-			c[it.it->key];
-	}
+	void insert(typename Const<ref_t>::type val);
+	void insert(const Set &s);
 
-	void remove(typename Const<ref_t>::type val)
-		{ c.remove(val); }
-	void remove(const Set &s) {
-		Iterator it, end = s.end();
-		for (it = s.begin(); it != end; ++it) {
-			try { c.remove(it.it->key); } catch(Exception &e) {}
-		}
-	}
+	void remove(typename Const<ref_t>::type val);
+	void remove(const Set &s);
 
-	void retain(const Set &s) {
-		Iterator it(c.begin()), end(c.end());
-		while (it != end) {
-			if (!s.contains(it.it->key))
-				it.it = c.remove(it.it);
-			else ++it;
-		}
-	}
+	void retain(const Set &s);
 
-	size_t count() const
+	inline size_t count() const
 		{ return c.count(); }
-	
-	void clear()
+	inline void clear()
 		{ c.clear(); }
-
-	void move(Set &s)
+	inline void move(Set &s)
 		{ c.move(s.c); }
-
-	void swap(Set &s)
+	inline void swap(Set &s)
 		{ c.swap(s.c); }
 
 };
-	
+
+#include "Set.tcc"	
 
 #endif
 
