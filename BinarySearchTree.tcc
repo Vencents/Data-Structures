@@ -37,7 +37,7 @@ const BinarySearchTree_Iterator<T, Alloc> &BinarySearchTree_Iterator<T, Alloc>::
 
 template <typename T, typename Alloc>
 typename BinarySearchTree<T, Alloc>::Iterator BinarySearchTree<T, Alloc>::begin() const {
-	return ++Iterator(root);
+	return Iterator(root);
 }
 
 template <typename T, typename Alloc>
