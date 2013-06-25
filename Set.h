@@ -1,57 +1,17 @@
 #ifndef SET_H
 #define SET_H
 
-#include "Hashtable.h"
+#include "BinarySearchTree.h"
 
-template <typename T>
-class Set;
-
-template <typename T>
-class Set_Iterator {
-	friend class Set<T>;
-protected:
-	mutable typename Hashtable<T, char>::Iterator it;
-public:
-	typedef T	value_t;
-	typedef T	*ptr_t;
-	typedef T	&ref_t;
-
-	Set_Iterator() : it() {}
-	Set_Iterator(const Set_Iterator &i) : it(i.it) {}
-	Set_Iterator(typename Const<typename Hashtable<T, char>::Iterator>::type i) : it(i) {}
-
-	const Set_Iterator &operator =(const Set_Iterator &i) const { it = i.it; return *this; }
-	
-	value_t operator * () const { return it->key; }
-	const ptr_t operator -> () const { return &it->key; }
-	
-	const Set_Iterator &operator ++ () const { ++it; return *this; }
-	const Set_Iterator &operator -- () const { --it; return *this; }
-	Set_Iterator operator ++ (int) const {
-		Set_Iterator tmp(*this);
-		++it;
-		return tmp;
-	}
-	Set_Iterator operator -- (int) const {
-		Set_Iterator tmp(*this);
-		--it;
-		return tmp;
-	}
-	bool operator == (const Set_Iterator &i) const
-		{ return it == i.it; }
-	bool operator != (const Set_Iterator &i) const
-		{ return it != i.it; }		
-};
-
-template <typename T>
+template <typename T, typename Container = BinarySearchTree<T> >
 class Set {
 protected:
-	mutable Hashtable<T, char> c;
+	mutable Container c;
 public:
 	typedef T	value_t;
 	typedef T	*ptr_t;
 	typedef T	&ref_t;
-	typedef Set_Iterator<T>	Iterator;
+	typedef typename Container::Iterator	Iterator;
 
 	template <typename InputIter>
 	void set(typename Const<InputIter>::type p, size_t n);
@@ -64,24 +24,28 @@ public:
 	Set(typename Const<ptr_t>::type p, size_t n);
 		
 	
-	Set &operator = (const Set &s);
+	inline Set &operator = (const Set &s)
+		{ c = s.c; return *this; }
 
-	Iterator begin();
-	Iterator end(); 
-	typename Const<Iterator>::type begin() const;
-	typename Const<Iterator>::type end() const; 
-		
-	bool contains(typename Const<ref_t>::type val) const;
-	bool contains(const Set &s) const;
+	inline Iterator begin() const
+		{ return c.begin(); }
+	inline Iterator end() const
+		{ return c.end(); }
 	
-	void insert(typename Const<ref_t>::type val);
+	inline bool exists(const value_t &key) const
+		{ return c.exists(key); }
+	bool exists(const Set &s) const;
+	
+	inline void insert(const value_t &key)
+		{ c.insert(key); }
 	void insert(const Set &s);
 
-	void remove(typename Const<ref_t>::type val);
+	inline void remove(const value_t &key)
+		{ c.remove(key); }
 	void remove(const Set &s);
 
-	void retain(const Set &s);
-
+	inline const value_t *find(const value_t &k) const
+		{ return c.find(k); }
 	inline size_t count() const
 		{ return c.count(); }
 	inline void clear()

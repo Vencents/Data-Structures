@@ -172,18 +172,6 @@ void Slinkedlist<T, A>::resize(size_t n, typename Const<ref_t>::type val) {
 }
 
 template <typename T, typename A>
-typename Slinkedlist<T, A>::value_t Slinkedlist<T, A>::first() const {
-	if (_count == 0) throw Enodata();
-	return front->val;
-}
-
-template <typename T, typename A>
-typename Slinkedlist<T, A>::value_t Slinkedlist<T, A>::last() const {
-	if (_count == 0) throw Enodata();
-	return back->val;
-}
-
-template <typename T, typename A>
 size_t Slinkedlist<T, A>::unshift(typename Const<ref_t>::type val) {
 	Slinkedlist_Node<T> *node;
 	node = allocator.alloc(1);

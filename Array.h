@@ -88,8 +88,8 @@ public:
 	ssize_t find(typename Const<ref_t>::type val) const;
 	ssize_t rfind(typename Const<ref_t>::type val) const;
 	inline void reverse() { if (buf_base != ptr_t()) Algorithm::reverse(buf_base, buf_dend); }
-	inline value_t first() const { return this->operator [] (0); }
-	inline value_t last() const { return this->operator [] (-1); }	
+	inline const value_t &first() const { return this->operator [] (0); }
+	inline const value_t &last() const { return this->operator [] (-1); }	
 };
 
 #include "Array.tcc"

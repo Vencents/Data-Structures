@@ -100,8 +100,14 @@ public:
 	void clear();
 	void resize(size_t n, typename Const<ref_t>::type val = value_t());
 	size_t count() const { return _count; }
-	value_t first() const;
-	value_t last() const;
+	inline const value_t &first() const {
+		if (_count == 0) throw Enodata();
+		return front->val;
+	}
+	inline const value_t &last() const {
+		if (_count == 0) throw Enodata();
+		return back->val;
+	}
 
 	size_t unshift(typename Const<ref_t>::type val);
 	value_t shift();

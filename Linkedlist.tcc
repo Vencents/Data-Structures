@@ -44,37 +44,37 @@ typename Linkedlist<T, Alloc>::Iterator Linkedlist<T, Alloc>::begin() {
 
 template <typename T, typename Alloc>
 typename Linkedlist<T, Alloc>::Iterator Linkedlist<T, Alloc>::end() {
-	return Linkedlist_Iterator<T, Alloc>(&end_node);
+	return Iterator(&end_node);
 }
 
 template <typename T, typename Alloc>
 typename Const<typename Linkedlist<T, Alloc>::Iterator>::type Linkedlist<T, Alloc>::begin() const {
-	return Linkedlist_Iterator<T, Alloc>(base_node.next);
+	return Iterator(base_node.next);
 }
 
 template <typename T, typename Alloc>
 typename Const<typename Linkedlist<T, Alloc>::Iterator>::type Linkedlist<T, Alloc>::end() const {
-	return Linkedlist_Iterator<T, Alloc>(&end_node);
+	return Iterator(&end_node);
 }
 
 template <typename T, typename Alloc>
 typename Linkedlist<T, Alloc>::Reverser Linkedlist<T, Alloc>::rbegin() {
-	return Linkedlist_Iterator<T, Alloc>(&end_node);
+	return Iterator(&end_node);
 }
 
 template <typename T, typename Alloc>
 typename Linkedlist<T, Alloc>::Reverser Linkedlist<T, Alloc>::rend() {
-	return Linkedlist_Iterator<T, Alloc>(base_node.next);
+	return Iterator(base_node.next);
 }
 
 template <typename T, typename Alloc>
 typename Const<typename Linkedlist<T, Alloc>::Reverser>::type Linkedlist<T, Alloc>::rbegin() const {
-	return Linkedlist_Iterator<T, Alloc>(&end_node);
+	return Iterator(&end_node);
 }
 
 template <typename T, typename Alloc>
 typename Const<typename Linkedlist<T, Alloc>::Reverser>::type Linkedlist<T, Alloc>::rend() const {
-	return Linkedlist_Iterator<T, Alloc>(base_node.next);
+	return Iterator(base_node.next);
 }
 
 template <typename T, typename Alloc>
@@ -183,7 +183,7 @@ void Linkedlist<T, Alloc>::swap(Linkedlist &t) {
 }
 
 template <typename T, typename Alloc>
-size_t Linkedlist<T, Alloc>::push(typename Const<ref_t>::type val) {
+size_t Linkedlist<T, Alloc>::push(const value_t &val) {
 	Linkedlist_Node<T> *node;
 	node = allocator.alloc(1);
 	node->construct(val);
@@ -209,7 +209,7 @@ typename Linkedlist<T, Alloc>::value_t Linkedlist<T, Alloc>::pop() {
 }
 
 template <typename T, typename Alloc>
-size_t Linkedlist<T, Alloc>::unshift(typename Const<ref_t>::type val) {
+size_t Linkedlist<T, Alloc>::unshift(const value_t &val) {
 	Linkedlist_Node<T> *node;
 	node = allocator.alloc(1);
 	node->construct(val);
@@ -235,18 +235,6 @@ typename Linkedlist<T, Alloc>::value_t Linkedlist<T, Alloc>::shift() {
 }
 
 template <typename T, typename Alloc>
-typename Linkedlist<T, Alloc>::value_t Linkedlist<T, Alloc>::first() const {
-	if (base_node.next == &end_node) throw Enodata();
-	return base_node.next->val;
-}
-
-template <typename T, typename Alloc>
-typename Linkedlist<T, Alloc>::value_t Linkedlist<T, Alloc>::last() const {
-	if (end_node.prev == &base_node) throw Enodata();
-	return end_node.prev->val;
-}
-
-template <typename T, typename Alloc>
 void Linkedlist<T, Alloc>::clear() {
 	Linkedlist_Node<T> *node, *next;
 	if (_count == 0) return;
@@ -263,7 +251,7 @@ void Linkedlist<T, Alloc>::clear() {
 }
 
 template <typename T, typename Alloc>
-void Linkedlist<T, Alloc>::resize(size_t n, typename Const<ref_t>::type val) {
+void Linkedlist<T, Alloc>::resize(size_t n, const value_t &val) { 
 	Linkedlist_Node<T> *node;
 	if (n == _count) return;
 	while (n > _count) {
@@ -286,7 +274,7 @@ void Linkedlist<T, Alloc>::resize(size_t n, typename Const<ref_t>::type val) {
 }	
 
 template <typename T, typename Alloc>
-size_t Linkedlist<T, Alloc>::insert(Iterator pos, typename Const<ref_t>::type val) {
+size_t Linkedlist<T, Alloc>::insert(Iterator pos, const value_t &val) {
 	Linkedlist_Node<T> *node;
 	node = allocator.alloc(1);
 	node->construct(val);
@@ -314,7 +302,7 @@ void Linkedlist<T, Alloc>::remove(Iterator pos, size_t n) {
 }
 
 template <typename T, typename Alloc>
-void Linkedlist<T, Alloc>::fill(Iterator pos, size_t n, typename Const<ref_t>::type val) {
+void Linkedlist<T, Alloc>::fill(Iterator pos, size_t n, const value_t &val) {
 	size_t i = 0;
 	Linkedlist_Node<T> *node;
 	while (pos.curr != &end_node) {
@@ -363,12 +351,12 @@ void Linkedlist<T, Alloc>::set(typename Const<InputIter>::type p, size_t n) {
 }
 
 template <typename T, typename Alloc>
-void Linkedlist<T, Alloc>::set(typename Const<ptr_t>::type p, size_t n) {
+void Linkedlist<T, Alloc>::set(const value_t *p, size_t n) {
 	this->set(p, n);
 }
 
 template <typename T, typename Alloc>
-typename Linkedlist<T, Alloc>::Iterator Linkedlist<T, Alloc>::find(typename Const<ref_t>::type val) const {
+typename Linkedlist<T, Alloc>::Iterator Linkedlist<T, Alloc>::find(const value_t &val) const {
 	Linkedlist_Node<T> *node;
 	for (node = base_node.next; node != &end_node; node = node->next) {
 		if (node->val == val) return Linkedlist_Iterator<T, Alloc>(node);
@@ -377,7 +365,7 @@ typename Linkedlist<T, Alloc>::Iterator Linkedlist<T, Alloc>::find(typename Cons
 }
 
 template <typename T, typename Alloc>
-typename Linkedlist<T, Alloc>::Iterator Linkedlist<T, Alloc>::rfind(typename Const<ref_t>::type val) const {
+typename Linkedlist<T, Alloc>::Iterator Linkedlist<T, Alloc>::rfind(const value_t &val) const {
 	Linkedlist_Node<T> *node;
 	for (node = end_node.prev; node != &base_node; node = node->prev) {
 		if (node->val == val) return Linkedlist_Iterator<T, Alloc>(node);

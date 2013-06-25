@@ -32,37 +32,7 @@ public:
 };
 
 template <typename Type, typename Alloc>
-class Linkedlist;
-
-template <typename Type, typename Alloc>
-class Linkedlist_Iterator {
-	friend class Linkedlist<Type, Alloc>;
-protected:
-	mutable Linkedlist_Node<Type> *curr;
-public:
-	typedef Type value_t;
-	typedef Type *ptr_t;
-	typedef Type &ref_t;
-
-	Linkedlist_Iterator() : curr() {}
-	Linkedlist_Iterator(const Linkedlist_Iterator &i) : curr(i.curr) {}
-	Linkedlist_Iterator(Linkedlist_Node<Type> * const node) : curr(node) {}
-
-	const Linkedlist_Iterator &operator = (const Linkedlist_Iterator &t) const
-		{ curr = t.curr; return *this; }
-
-	ref_t operator * () { return curr->val; }
-	const ref_t operator * () const { return curr->val; }
-	ptr_t operator -> () { return &curr->val; }
-	const ptr_t operator -> () const { return &curr->val; }
-	const Linkedlist_Iterator &operator ++ () const;
-	const Linkedlist_Iterator &operator -- () const;
-	Linkedlist_Iterator operator ++ (int) const;
-	Linkedlist_Iterator operator -- (int) const;
-	bool operator == (const Linkedlist_Iterator &i) const;
-	bool operator != (const Linkedlist_Iterator &i) const;
-	
-};
+class Linkedlist_Iterator;
 
 template <typename Type, typename Alloc = Allocator>
 class Linkedlist {
@@ -73,9 +43,9 @@ public:
 	typedef Linkedlist_Iterator<Type, Alloc>	Iterator;
 	typedef ::Reverser<Iterator>			Reverser;
 protected:
+	typedef typename Const<ref_t>::type const_ref_t;
 	size_t _count;
 	Object_Allocator<Linkedlist_Node<Type>, Alloc> allocator;
-	/* base_node links right before the first element, end_node links right after the last element */
 	mutable Linkedlist_Node<Type> base_node, end_node;
 public:
 	Linkedlist();
@@ -95,6 +65,7 @@ public:
 	Iterator end();
 	typename Const<Iterator>::type begin() const;
 	typename Const<Iterator>::type end() const;
+
 	Reverser rbegin();
 	Reverser rend();
 	typename Const<Reverser>::type rbegin() const;
@@ -102,38 +73,75 @@ public:
 
 	template <typename InputIter>
 	void set(typename Const<InputIter>::type p, size_t n);
-	void set(typename Const<ptr_t>::type p, size_t n);
+	void set(const value_t *p, size_t n);
 	Linkedlist &operator =(const Linkedlist &t)
 		{ this->set<Iterator>(t.begin(), t.count()); return *this; }
 	void clear();
-	void resize(size_t n, typename Const<ref_t>::type val = value_t());
+	void resize(size_t n, const value_t &val = value_t());
 	size_t count() const { return _count; }
-	value_t first() const;
-	value_t last() const;
-//Fast
-	size_t push(typename Const<ref_t>::type val);
+	inline const value_t &first() const {
+		if (base_node.next == &end_node) throw Enodata();
+		return base_node.next->val;
+	}
+	inline const value_t &last() const {
+		if (end_node.prev == &base_node) throw Enodata();
+		return end_node.prev->val;
+	}	
+
+	size_t push(const value_t &val);
 	value_t pop();
-	size_t unshift(typename Const<ref_t>::type val);
+	size_t unshift(const value_t &val);
 	value_t shift();
-	size_t insert(Iterator pos, typename Const<ref_t>::type val);
+	size_t insert(Iterator pos, const value_t &val);
 	void remove(Iterator pos, size_t count = 1);
-	void fill(Iterator pos, size_t n, typename Const<ref_t>::type val);
-//Slow
+	void fill(Iterator pos, size_t n, const value_t &val);
+
 	ref_t operator [] (ssize_t index);
 	typename Const<ref_t>::type operator [] (ssize_t index) const;
-	Iterator find(typename Const<ref_t>::type val) const;
-	Iterator rfind(typename Const<ref_t>::type val) const;
+	Iterator find(const value_t &val) const;
+	Iterator rfind(const value_t &val) const;
 	Iterator from(ssize_t index);
 	typename Const<Iterator>::type from(ssize_t index) const;
 
-	inline size_t insert(ssize_t pos, typename Const<ref_t>::type val)
+	inline size_t insert(ssize_t pos, const value_t &val)
 		{ return this->insert(this->from(pos), val); }
 	inline void remove(ssize_t pos, size_t count = 1)
 		{ this->remove(this->from(pos), count); }
-	inline void fill(ssize_t pos, size_t n, typename Const<ref_t>::type val)
+	inline void fill(ssize_t pos, size_t n, const value_t &val)
 		{ this->fill(this->from(pos), n, val); }
 
 };	
+
+template <typename Type, typename Alloc>
+class Linkedlist_Iterator {
+	friend class Linkedlist<Type, Alloc>;
+protected:
+	mutable Linkedlist_Node<Type> *curr;
+public:
+	typedef Type value_t;
+	typedef Type *ptr_t;
+	typedef Type &ref_t;
+
+	Linkedlist_Iterator() : curr() {}
+	Linkedlist_Iterator(const Linkedlist_Iterator &i) : curr(i.curr) {}
+	Linkedlist_Iterator(Linkedlist_Node<Type> * const node) : curr(node) {}
+
+	const Linkedlist_Iterator &operator = (const Linkedlist_Iterator &t) const
+		{ curr = t.curr; return *this; }
+
+	value_t &operator * () { return curr->val; }
+	const value_t &operator * () const { return curr->val; }
+	value_t *operator -> () { return &curr->val; }
+	const value_t *operator -> () const { return &curr->val; }
+	const Linkedlist_Iterator &operator ++ () const;
+	const Linkedlist_Iterator &operator -- () const;
+	Linkedlist_Iterator operator ++ (int) const;
+	Linkedlist_Iterator operator -- (int) const;
+	bool operator == (const Linkedlist_Iterator &i) const;
+	bool operator != (const Linkedlist_Iterator &i) const;
+	
+};
+
 
 #include "Linkedlist.tcc"
 
