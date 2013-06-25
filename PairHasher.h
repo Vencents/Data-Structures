@@ -1,6 +1,9 @@
 #ifndef PAIRHASHER_H
 #define PAIRHASHER_H
 
+#include "Pair.h"
+#include "Hash.h"
+
 template <typename Key, typename Val, typename Hashfunc = Hash<Key> >
 class PairHasher {
 protected:
