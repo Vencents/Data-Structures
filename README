@@ -1,0 +1,22 @@
+
+Abstract data structures:
+
+Deque		- A sequence of values which can be modified from the front or back.
+Dictionary	- A collection of (key, value) pairs, where each key is unique.
+List		- A random-access sequence of values.
+Multiset	- A collection of values.
+Ringbuffer	- A sequence of values where the front and back are connected.
+Set		- A collection of unique values.
+Stack		- A first-in-first-out sequence. 
+Queue		- A last-in-first-out sequence.
+
+Data structures:
+
+Array			- Implements Deque, List, Ringbuffer, Stack, and Queue.
+BinarySearchTree	- Implements Dictionary, Multiset, and Set.
+Hashtable		- Implements Dictionary, Multiset, and Set.
+Linkedlist		- Implements Deque, List, Ringbuffer, Stack, and Queue
+Slinkedlist		- A Singly-Linked List
+
+
+
