@@ -1,7 +1,7 @@
 
 Abstract data structures:
 
-Deque		- A sequence of values which can be modified from the front or back.
+Deque		- A sequence which can be modified from the front or back.
 Dictionary	- A collection of (key, value) pairs, where each key is unique.
 List		- A random-access sequence of values.
 Multiset	- A collection of values.
