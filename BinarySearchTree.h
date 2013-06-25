@@ -22,7 +22,7 @@ public:
 	value_t	key;
 	mutable BinarySearchTree_Node *parent, *left, *right;
 
-	BinarySearchTree_Node() : parent(), left(), right() {}
+	BinarySearchTree_Node() : parent(0), left(0), right(0) {}
 	BinarySearchTree_Node(const BinarySearchTree_Node &n) :
 		key(n.key), parent(n.parent), left(n.left), right(n.right) {}
 	BinarySearchTree_Node &operator =(const BinarySearchTree_Node &n) {
@@ -63,7 +63,7 @@ protected:
 	void rec_clear(node_t *n);
 	void replace_node_in_parent(node_t *node, node_t *newnode);	
 public:
-	BinarySearchTree() : root(), allocator(), _count() {}
+	BinarySearchTree() : root(0), allocator(), _count(0) {}
 	
 	Iterator begin() const;
 	Iterator end() const;
@@ -111,7 +111,7 @@ public:
 		node(it.node), last_visited(it.last_visited) {}
 	BinarySearchTree_Iterator(
 		BinarySearchTree_Node<T> * const n
-	) : node(n), last_visited() {}
+	) : node(n), last_visited(0) {}
 
 	const BinarySearchTree_Iterator &operator =(const BinarySearchTree_Iterator &b) {
 		node = b.node;

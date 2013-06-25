@@ -3,6 +3,7 @@ const BinarySearchTree_Iterator<T, Alloc> &BinarySearchTree_Iterator<T, Alloc>::
 	if (node == 0) throw Erange();
 	if (node->parent == 0 && last_visited != 0) {
 		if (last_visited == node->left) {
+			if (node->right == 0) { node = 0; return *this; }
 			last_visited = node;
 			node = node->right;
 			while (node->left != 0) node = node->left;
@@ -25,19 +26,22 @@ const BinarySearchTree_Iterator<T, Alloc> &BinarySearchTree_Iterator<T, Alloc>::
 		last_visited = node;
 		if (node->right == 0) { node = node->parent; return *this; }
 		else node = node->right;
-	} else if (node->right == last_visited) {
+	} else if (node->right == last_visited && last_visited != 0) {
 		last_visited = node;
 		node = node->parent;
 		return *this;
 	}
-	while (node->left != 0) node = node->left;
+	while (node->left != 0) { node = node->left; }
 	return *this;
 	
 }
 
 template <typename T, typename Alloc>
 typename BinarySearchTree<T, Alloc>::Iterator BinarySearchTree<T, Alloc>::begin() const {
-	return Iterator(root);
+	node_t *node = root;
+	if (node == 0) return Iterator(0);
+	while (node->left != 0) { node = node->left; }	
+	return Iterator(node);
 }
 
 template <typename T, typename Alloc>
@@ -125,6 +129,7 @@ void BinarySearchTree<T, Alloc>::rec_insert(node_t *node, const value_t &key) {
 	if (key < node->key) {
 		if (node->left == 0) {
 			newnode = allocator.alloc(1);
+			allocator.construct(newnode);
 			newnode->construct(key);
 			node->left = newnode;
 			newnode->parent = node;
@@ -133,6 +138,7 @@ void BinarySearchTree<T, Alloc>::rec_insert(node_t *node, const value_t &key) {
 	} else if (node->key < key) {
 		if (node->right == 0) {
 			newnode = allocator.alloc(1);
+			allocator.construct(newnode);
 			newnode->construct(key);
 			node->right = newnode;
 			newnode->parent = node;
@@ -147,6 +153,7 @@ template <typename T, typename Alloc>
 void BinarySearchTree<T, Alloc>::insert(const value_t &key) {
 	if (root == 0) {
 		root = allocator.alloc(1);
+		allocator.construct(root);
 		root->construct(key);
 	} else this->rec_insert(root, key);
 }
