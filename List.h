@@ -15,7 +15,7 @@ public:
 
 	List() : c() {}
 	List(const List &t) : c(t.c) {}
-	List(const Contianer &_c) : c(_c) {}
+	List(const Container &_c) : c(_c) {}
 
 	List &operator = (const List &t)
 		{ c = t.c; return *this; }
