@@ -38,6 +38,9 @@ public:
 	Ringbuffer(const Ringbuffer &r);
 	Ringbuffer(const Container &container);
 
+	Ringbuffer &operator = (const Ringbuffer &r)
+		{ c = r.c; return *this; }
+ 
 	size_t push(typename Const<ref_t>::type val);
 	value_t pop();
 	size_t unshift(typename Const<ref_t>::type val);

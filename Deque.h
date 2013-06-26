@@ -15,6 +15,9 @@ public:
 	Deque(const Deque &d) : c(d.c) {}
 	Deque(const Container &_c) : c(_c) {}
 
+	Deque &operator = (const Deque &d)
+		{ c = d.c; return *this; }
+
 	inline void push(typename Const<ref_t>::type val)
 		{ c.push(val); }
 	

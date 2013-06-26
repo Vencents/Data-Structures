@@ -13,16 +13,9 @@ public:
 	typedef T	&ref_t;
 	typedef typename Container::Iterator	Iterator;
 
-	template <typename InputIter>
-	void set(typename Const<InputIter>::type p, size_t n);
-	void set(typename Const<ptr_t>::type p, size_t n);
-
 	Set() : c() {}
 	Set(const Set &s) : c(s.c) {}
-	template <size_t N>
-	Set(const value_t (&lst)[N]);
-	Set(typename Const<ptr_t>::type p, size_t n);
-		
+	Set(const Container &_c) : c(_c) {}
 	
 	inline Set &operator = (const Set &s)
 		{ c = s.c; return *this; }

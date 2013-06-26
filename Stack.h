@@ -15,6 +15,9 @@ public:
 	Stack() : c() {}
 	Stack(const Stack &s) : c(s.c) {}
 	Stack(const Container &container) : c(container) {}
+
+	Stack &operator = (const Stack &s)
+		{ c = s.c; return *this; }
 	
 	inline void push(typename Const<ref_t>::type val)
 		{ c.push(val); }

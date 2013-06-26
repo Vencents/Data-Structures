@@ -1,26 +1,11 @@
-
-template <typename T, typename Container>	
-template <typename InputIter>
-void Multiset<T, Container>::set(typename Const<InputIter>::type p, size_t n) {
-	_count = 0;
-	c.clear();
-	for (size_t i = 0; i < n; ++i, ++p) {
-		c.insert(*p);
-		++_count;
+template <typename T, typename Container>
+Multiset<T, Container>::Multiset(const Container &_c) : c(_c), _count() {
+	Iterator it, end;
+	end = c.end();
+	for (it = c.begin(); it != end; ++it) {
+		_count += it->count;
 	}
 }
-
-template <typename T, typename Container>
-void Multiset<T, Container>::set(typename Const<ptr_t>::type p, size_t n)
-	{ this->set<ptr_t>(p, n); }
-
-template <typename T, typename Container>
-template <size_t N>
-Multiset<T, Container>::Multiset(const value_t (&lst)[N]) : c(), _count()
-	{ this->set<ptr_t>((ptr_t)lst, N); }
-template <typename T, typename Container>
-Multiset<T, Container>::Multiset(typename Const<ptr_t>::type p, size_t n) : c(), _count()
-	{ this->set<ptr_t>(p, n); }
 
 template <typename T, typename Container>
 Multiset<T, Container> &Multiset<T, Container>::operator =(const Multiset &m)

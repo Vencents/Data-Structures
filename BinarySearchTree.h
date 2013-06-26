@@ -56,14 +56,16 @@ protected:
 	Object_Allocator<node_t, Alloc>	allocator;
 	size_t _count;
 
-	template <typename Callback>
-	bool rec_walk(Callback callback, node_t *node);
 	void rec_remove(node_t *n, const value_t &key);
 	void rec_insert(node_t *n, const value_t &key);
 	void rec_clear(node_t *n);
+	void rec_copy(BinarySearchTree &t, const node_t *n) const;
 	void replace_node_in_parent(node_t *node, node_t *newnode);	
 public:
 	BinarySearchTree() : root(0), allocator(), _count(0) {}
+	BinarySearchTree(const BinarySearchTree &b);
+
+	BinarySearchTree &operator = (const BinarySearchTree &b);
 	
 	Iterator begin() const;
 	Iterator end() const;
@@ -89,9 +91,6 @@ public:
 	void clear();
 	inline size_t count() const { return _count; }
 	size_t depth() const;
-
-	template <typename Callback>
-	void walk(Callback callback);
 
 	~BinarySearchTree() { this->clear(); }
 };

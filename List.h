@@ -15,13 +15,10 @@ public:
 
 	List() : c() {}
 	List(const List &t) : c(t.c) {}
-	List(size_t n) : c(n) {}
-	template <size_t N>
-	List(const value_t (&lst)[N]) : c(lst) {}
-	template <typename InputIter>
-	List(typename Const<InputIter>::type p, size_t n) :
-		c(p, n) {}
-	List(const value_t *p, size_t n) : c(p, n) {}
+	List(const Contianer &_c) : c(_c) {}
+
+	List &operator = (const List &t)
+		{ c = t.c; return *this; }
 
 	inline Iterator begin()
 		{ return c.begin(); }

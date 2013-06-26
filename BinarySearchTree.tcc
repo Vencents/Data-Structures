@@ -77,19 +77,23 @@ typename BinarySearchTree<T, Alloc>::const_ptr_t BinarySearchTree<T, Alloc>::fin
 */
 
 template <typename T, typename Alloc>
-template <typename Callback>
-bool BinarySearchTree<T, Alloc>::rec_walk(Callback callback, node_t *node) {
-	if (node == 0) return true;
-	if (this->real_walk(callback, node->left) == false) return false;
-	if (callback(node->key) == false) return false;
-	if (this->real_walk(callback, node->right) == false) return false;
-	return true;
+void BinarySearchTree<T, Alloc>::rec_copy(BinarySearchTree &t, const node_t *node) const {
+	if (node == 0) return;
+	rec_copy(t, node->left);
+	t.insert(node->key);
+	rec_copy(t, node->right);
 }
 
 template <typename T, typename Alloc>
-template <typename Callback>
-void BinarySearchTree<T, Alloc>::walk(Callback callback) {
-	this->rec_walk<Callback>(callback, root);
+BinarySearchTree<T, Alloc>::BinarySearchTree(const BinarySearchTree &t) :
+	root(), allocator(), _count() {
+	t.rec_copy(*this, t.root);
+}
+
+template <typename T, typename Alloc>
+BinarySearchTree<T, Alloc> &BinarySearchTree<T, Alloc>::operator = (const BinarySearchTree &t) {
+	this->clear();
+	t.rec_copy(*this, t.root);
 }
 
 template <typename T, typename Alloc>

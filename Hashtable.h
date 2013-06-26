@@ -36,6 +36,9 @@ public:
 		table(h.table), _count(h._count), hasher() {}
 	~Hashtable() {}
 
+	Hashtable &operator = (const Hashtable &h)
+		{ table = h.table; _count = h._count; return *this; }
+
 	void swap(Hashtable &h);
 	void move(Hashtable &h);
 

@@ -15,6 +15,9 @@ public:
 	Queue() : c() {}
 	Queue(const Queue &q) : c(q.c) {}
 	Queue(const Container &_c) : c(_c) {}
+
+	Queue &operator = (const Queue &q)
+		{ c = q.c; return *this; }
 	
 	inline void push(typename Const<ref_t>::type val)
 		{ c.push(val); }

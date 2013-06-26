@@ -24,6 +24,11 @@ protected:
 	Container c;
 public:
 	Dictionary() : c() {}
+	Dictionary(const Dictionary &d) : c(d.c) {}
+	Dictionary(const Container &_c) : c(_c) {}
+
+	Dictionary &operator = (const Dictionary &d)
+		{ c = d.c; return *this; }
 
 	Iterator begin() { return c.begin(); }
 	Iterator end() { return c.end(); }

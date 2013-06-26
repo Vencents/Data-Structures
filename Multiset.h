@@ -34,15 +34,9 @@ public:
 	typedef T			&ref_t;
 	typedef Multiset_Iterator<T, Container>	Iterator;
 
-	template <typename InputIter>
-	void set(typename Const<InputIter>::type p, size_t n);
-	void set(typename Const<ptr_t>::type p, size_t n);
-	
 	Multiset() : c(), _count() {}
 	Multiset(const Multiset &m) : c(m.c), _count(m._count) {}
-	template <size_t N>
-	Multiset(const value_t (&lst)[N]);
-	Multiset(typename Const<ptr_t>::type p, size_t n);
+	Multiset(const Container &_c);
 	
 	Multiset &operator =(const Multiset &m);
 	
