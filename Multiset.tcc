@@ -53,7 +53,7 @@ void Multiset<T, Container>::insert(const value_t &key) {
 
 template <typename T, typename Container>
 void Multiset<T, Container>::insert(const value_t &key, size_t n) {
-	Multiset_Node<T> node(key, n);
+	node_t node(key, n);
 	const node_t *p;
 	p = c.find(node);
 	if (p) p->count += n;
