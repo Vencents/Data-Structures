@@ -43,7 +43,7 @@ void Multiset<T, Container>::scale(size_t n) {
 
 template <typename T, typename Container>
 void Multiset<T, Container>::insert(const value_t &key) {
-	Multiset_Node<T> n(key);
+	node_t n(key);
 	const node_t *p;
 	p = c.find(n);
 	if (p) ++p->count;
@@ -53,7 +53,7 @@ void Multiset<T, Container>::insert(const value_t &key) {
 
 template <typename T, typename Container>
 void Multiset<T, Container>::insert(const value_t &key, size_t n) {
-	Multiset_Node<T> node(key);
+	Multiset_Node<T> node(key, n);
 	const node_t *p;
 	p = c.find(node);
 	if (p) p->count += n;

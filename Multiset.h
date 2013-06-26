@@ -13,6 +13,7 @@ public:
 	mutable size_t	count;
 	Multiset_Node() : key(), count() {}
 	Multiset_Node(const T &k) : key(k), count(1) {}
+	Multiset_Node(const T &k, size_t n) : key(k), count(n) {}
 
 	bool operator < (const Multiset_Node &m) const
 		{ return key < m.key; }	
