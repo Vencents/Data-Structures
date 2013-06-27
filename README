@@ -10,10 +10,10 @@ Queue		- A last-in-first-out sequence.
 
 Data structures:
 
-Array			- Implements Deque, List, Ringbuffer, Stack, and Queue.
+Array			- Implements Deque, List, Stack, and Queue.
 BinarySearchTree	- Implements Dictionary, Multiset, and Set.
 Hashtable		- Implements Dictionary, Multiset, and Set.
-Linkedlist		- Implements Deque, List, Ringbuffer, Stack, and Queue
+Linkedlist		- Implements Deque, List, Stack, and Queue
 
 
 
