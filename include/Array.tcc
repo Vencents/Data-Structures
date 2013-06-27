@@ -141,7 +141,7 @@ void Array<T, Alloc>::remove(ssize_t index, size_t n) {
 }
 
 template <typename T, typename Alloc>
-void Array<T, Alloc>::insertAt(Iterator pos, const T &val) {
+typename Array<T, Alloc>::Iterator Array<T, Alloc>::insertAt(Iterator pos, const T &val) {
 	T *p;
 	if (_dend == _end) double_capacity();
 	if (pos > _dend) throw Erange();
@@ -159,10 +159,11 @@ void Array<T, Alloc>::insertAt(Iterator pos, const T &val) {
 		*p = *(p - 1);
 	}
 	*p = val;
+	return ++p;
 }
 
 template <typename T, typename Alloc>
-void Array<T, Alloc>::removeAt(Iterator pos, size_t n) {
+typename Array<T, Alloc>::Iterator Array<T, Alloc>::removeAt(Iterator pos, size_t n) {
 	T *p, *pend;
 	pend = pos + n;
 	if (pend > _dend) throw Erange();
@@ -177,6 +178,7 @@ void Array<T, Alloc>::removeAt(Iterator pos, size_t n) {
 		allocator.destroy(pos);
 	}
 	_dend -= n;
+	return pos;
 }
 
 template <typename T, typename Alloc>

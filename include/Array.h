@@ -95,10 +95,10 @@ public:
 	T shift();
 
 	void insert(ssize_t index, const T &val);
-	void insertAt(Iterator pos, const T &val);
+	Iterator insertAt(Iterator pos, const T &val);
 
 	void remove(ssize_t index, size_t n);
-	void removeAt(Iterator pos, size_t n);
+	Iterator removeAt(Iterator pos, size_t n);
 
 	Array slice(ssize_t first, size_t n) const;
 	Array sliceAt(Iterator pos, size_t n) const;
