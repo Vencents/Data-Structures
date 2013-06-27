@@ -7,92 +7,103 @@
 #include "Exception.h"
 #include "Algorithm.h"
 
-template <typename Type, typename Alloc = Allocator >
+template <typename T, typename Alloc = Allocator>
 class Array {
 public:
-	typedef Type				value_t;
-	typedef Type				*ptr_t;
-	typedef Type				&ref_t;
-	typedef ptr_t				Iterator;
-	typedef ::Reverser<Iterator>		Reverser;
+	typedef T				value_t;
+	
+	typedef T				*Iterator;
+	typedef ::Reverser<Iterator>	Reverser;
+
+	typedef typename Const<Iterator>::type	Const_Iterator;
+	typedef typename Const<Reverser>::type	Const_Reverser;
 protected:
-	Object_Allocator<Type, Alloc> allocator;
-	mutable ptr_t	buf_base;
-	mutable ptr_t	buf_dend;
-	mutable ptr_t	buf_end;
+	T *_base;
+	T *_dend;
+	T *_end;
+	Object_Allocator<T, Alloc>	allocator;
 
 	void double_capacity();
+
 public:
-
-	Iterator begin()	{ return buf_base; }
-	Iterator end()		{ return buf_dend; }
-	Reverser rbegin()	{ return buf_dend; }
-	Reverser rend()		{ return buf_base; }
-	typename Const<Iterator>::type begin() const	{ return buf_base; }
-	typename Const<Iterator>::type end() const	{ return buf_dend; }
-	typename Const<Reverser>::type rbegin() const	{ return buf_dend; }
-	typename Const<Reverser>::type rend() const	{ return buf_base; }
-	Iterator from(ssize_t index);
-	typename Const<Iterator>::type from(ssize_t index) const;
-
-	Array &operator = (const Array &a);
-
-	Array() : allocator(), buf_base(), buf_dend(), buf_end() {}
-	Array(const Array &a) : allocator(), buf_base(), buf_dend(), buf_end() { this->operator = (a); }
-	Array(size_t n);
-	template <size_t N>
-	Array(const value_t (&lst)[N]);
 	template <typename InputIter>
-	Array(typename Const<InputIter>::type p, size_t n);
-	Array(typename Const<ptr_t>::type p, size_t n);
+	void set(InputIter it, size_t n);
+	void resize(size_t n);
+	void resize(size_t n, const T &val);
+
+	Array() : _base(), _dend(), _end(), allocator() {}
+	Array(const Array &a) : 
+		_base(), _dend(), _end(), allocator() 
+		{ this->operator = (a); }
+	Array(size_t n) :
+		_base(), _dend(), _end(), allocator()
+		{ this->resize(n); }
+	Array(size_t n, const T &val) :
+		_base(), _dend(), _end(), allocator()
+		{ this->resize(n, val); }
+	Array(const T *p, size_t n) :
+		_base(), _dend(), _end(), allocator()
+		{ this->set<const T*>(p, n); }
 	~Array();
+
+	Array &operator = (const Array &a) {
+		this->set<const T*>(a._base, a._dend - a._base);
+		return *this;
+	}
+
+	inline Iterator begin()
+		{ return _base; }
+	inline Iterator end()
+		{ return _dend; }
+	inline Const_Iterator begin() const
+		{ return _base; }
+	inline Const_Iterator end() const
+		{ return _dend; }
+
+	inline Reverser rbegin()
+		{ return _dend; }
+	inline Reverser rend()
+		{ return _base; }
+	inline Const_Reverser rbegin() const
+		{ return _dend; } 
+	inline Const_Reverser rend() const
+		{ return _base; }
 
 	void move(Array &a);
 	void swap(Array &a);
 
-	template <typename InputIter>
-	void set(typename Const<InputIter>::type p, size_t n);
-	void set(typename Const<ptr_t>::type p, size_t n);
-	inline void clear() { buf_dend = buf_base; }
-	void resize(size_t n, typename Const<ref_t>::type val = value_t());
-	void reserve(size_t n);
+	void set(const T *p, size_t n)
+		{ this->set<const T*>(p, n); }
+	
+	inline void clear()
+		{ _dend = _base; }
 	inline size_t count() const
-		{ return (buf_base != ptr_t()) ? buf_dend - buf_base : 0; }
-	inline size_t capacity() const
-		{ return (buf_base != ptr_t()) ? buf_end - buf_base : 0; }
+		{ return _base ? _dend - _base : 0; }
 
-//Fast	
-	ref_t operator [] (ssize_t i);
-	typename Const<ref_t>::type operator [] (ssize_t i) const;
-	size_t push(typename Const<ref_t>::type val);
-	value_t pop();
-//Slow
-	value_t shift();
-	size_t unshift(typename Const<ref_t>::type val);
-	size_t insert(ssize_t index, typename Const<ref_t>::type val);
-	size_t insert(Iterator pos, typename Const<ref_t>::type val)
-		{ return this->insert(pos - buf_base, val); }
-	void remove(ssize_t index, size_t count);
-	void remove(Iterator pos, size_t count)
-		{ return this->remove(pos - buf_base, count); }
-	Array slice(ssize_t start, size_t length) const;
-	Array slice(Iterator pos, size_t length) const
-		{ return this->slice(pos - buf_base, length); }
-	Array splice(ssize_t start, size_t length, const Array &a) const;
-	Array splice(Iterator pos, size_t length, const Array &a) const
-		{ return this->splice(pos - buf_base, length, a); }
-	void fill(ssize_t start, size_t count, typename Const<ref_t>::type val);
-	void fill(Iterator pos, size_t count, typename Const<ref_t>::type val)
-		{ this->fill(pos - buf_base, count, val); }
-//
-	ssize_t find(typename Const<ref_t>::type val) const;
-	ssize_t rfind(typename Const<ref_t>::type val) const;
-	inline void reverse() { if (buf_base != ptr_t()) Algorithm::reverse(buf_base, buf_dend); }
-	inline const value_t &first() const { return this->operator [] (0); }
-	inline const value_t &last() const { return this->operator [] (-1); }	
-};
+	T &operator [] (ssize_t i);
+	const T &operator [](ssize_t i) const;
+
+	inline const T &first() const
+		{ return operator [] (0); }
+	inline const T &last() const
+		{ return operator [] (-1); }
+	
+	void push(const T &val);
+	T pop();
+
+	void unshift(const T &val);
+	T shift();
+
+	void insert(ssize_t index, const T &val);
+	void insertAt(Iterator pos, const T &val);
+
+	void remove(ssize_t index, size_t n);
+	void removeAt(Iterator pos, size_t n);
+
+	Array slice(ssize_t first, size_t n) const;
+	Array sliceAt(Iterator pos, size_t n) const;
+};	
 
 #include "Array.tcc"
 
 #endif
-	

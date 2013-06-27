@@ -1,458 +1,324 @@
 
 template <typename T, typename Alloc>
-const Linkedlist_Iterator<T, Alloc> &Linkedlist_Iterator<T, Alloc>::operator ++ () const {
-	if (curr->next == 0) throw Erange();
-	curr = curr->next;
-	return *this;
-}
-
-template <typename T, typename Alloc>
-const Linkedlist_Iterator<T, Alloc> &Linkedlist_Iterator<T, Alloc>::operator -- () const {
-	if (curr->prev == 0) throw Erange();
-	curr = curr->prev;
-	return *this;
-}
-
-template <typename T, typename Alloc>
-Linkedlist_Iterator<T, Alloc> Linkedlist_Iterator<T, Alloc>::operator ++ (int) const {
-	Linkedlist_Iterator tmp(*this);
-	operator ++();
-	return tmp;
-}
-
-template <typename T, typename Alloc>
-Linkedlist_Iterator<T, Alloc> Linkedlist_Iterator<T, Alloc>::operator -- (int) const {
-	Linkedlist_Iterator tmp(*this);
-	operator --();
-	return tmp;
-}
-
-template <typename T, typename Alloc>
-bool Linkedlist_Iterator<T, Alloc>::operator == (const Linkedlist_Iterator &i) const {
-	return curr == i.curr;
-}
-
-template <typename T, typename Alloc>
-bool Linkedlist_Iterator<T, Alloc>::operator != (const Linkedlist_Iterator &i) const {
-	return curr != i.curr;
-}
-
-template <typename T, typename Alloc>
-typename Linkedlist<T, Alloc>::Iterator Linkedlist<T, Alloc>::begin() {
-	return Linkedlist_Iterator<T, Alloc>(base_node.next);
-}
-
-template <typename T, typename Alloc>
-typename Linkedlist<T, Alloc>::Iterator Linkedlist<T, Alloc>::end() {
-	return Iterator(&end_node);
-}
-
-template <typename T, typename Alloc>
-typename Const<typename Linkedlist<T, Alloc>::Iterator>::type Linkedlist<T, Alloc>::begin() const {
-	return Iterator(base_node.next);
-}
-
-template <typename T, typename Alloc>
-typename Const<typename Linkedlist<T, Alloc>::Iterator>::type Linkedlist<T, Alloc>::end() const {
-	return Iterator(&end_node);
-}
-
-template <typename T, typename Alloc>
-typename Linkedlist<T, Alloc>::Reverser Linkedlist<T, Alloc>::rbegin() {
-	return Iterator(&end_node);
-}
-
-template <typename T, typename Alloc>
-typename Linkedlist<T, Alloc>::Reverser Linkedlist<T, Alloc>::rend() {
-	return Iterator(base_node.next);
-}
-
-template <typename T, typename Alloc>
-typename Const<typename Linkedlist<T, Alloc>::Reverser>::type Linkedlist<T, Alloc>::rbegin() const {
-	return Iterator(&end_node);
-}
-
-template <typename T, typename Alloc>
-typename Const<typename Linkedlist<T, Alloc>::Reverser>::type Linkedlist<T, Alloc>::rend() const {
-	return Iterator(base_node.next);
-}
-
-template <typename T, typename Alloc>
-Linkedlist<T, Alloc>::Linkedlist() : _count(), base_node(), end_node() {
-	base_node.next = &end_node;
-	base_node.prev = 0;
-	end_node.next = 0;
-	end_node.prev = &base_node;	
-}
-
-template <typename T, typename Alloc>
-template <size_t N>
-Linkedlist<T, Alloc>::Linkedlist(const value_t (&lst)[N]) : _count(), base_node(), end_node() {
-	base_node.prev = 0;
-	base_node.next = &end_node;
-	end_node.next = 0;
-	end_node.prev = &base_node;
-	this->set<ptr_t>(lst, N);
-}
-
-template <typename T, typename Alloc>
-Linkedlist<T, Alloc>::Linkedlist(size_t n) : _count(), base_node(), end_node() {
-	Linkedlist_Node<T> *newnode;
-	base_node.prev = 0;
-	base_node.next = &end_node;
-	end_node.next = 0;
-	end_node.prev = &base_node;
-	for (_count = 0; _count != n; ++_count) {
-		newnode = allocator.alloc(1);
-		newnode->construct();
-		newnode->prev = end_node.prev;
-		newnode->next = &end_node;
-		newnode->prev->next = newnode;
-		end_node.prev = newnode;
-	}
-}
-
-template <typename T, typename Alloc>
-template <typename InputIter>
-Linkedlist<T, Alloc>::Linkedlist(typename Const<InputIter>::type p, size_t n) : _count(), base_node(), end_node() {
-	base_node.next = &end_node;
-	base_node.prev = 0;
-	end_node.next = 0;
-	end_node.prev = &base_node;
-	this->set(p, n);	
-}
-
-template <typename T, typename Alloc>
-Linkedlist<T, Alloc>::Linkedlist(typename Const<ptr_t>::type p, size_t n) : _count(), base_node(), end_node() {
-	base_node.next = &end_node;
-	base_node.prev = 0;
-	end_node.next = 0;
-	end_node.prev = &base_node;
-	this->set<ptr_t>(p, n);
-}
-
-template <typename T, typename Alloc>
-Linkedlist<T, Alloc>::Linkedlist(const Linkedlist &l) : _count(l._count), base_node(), end_node()  {
-	Linkedlist_Node<T> *node, *newnode;
-	base_node.prev = 0;
-	base_node.next = &end_node;
-	end_node.next = 0;
-	end_node.prev = &base_node;
-	for (node = l.base_node.next; node != &l.end_node; node = node->next) {
-		newnode = allocator.alloc(1);
-		newnode->construct(node->val);
-		newnode->prev = end_node.prev;
-		newnode->next = &end_node;
-		newnode->prev->next = newnode;
-		end_node.prev = newnode;		
-	} 
-};
-
-template <typename T, typename Alloc>
-Linkedlist<T, Alloc>::~Linkedlist() {
-	this->clear();
+Linkedlist<T, Alloc>::Linkedlist() {
+	head.prev = 0;
+	head.next = &tail;
+	tail.prev = &head;
+	tail.next = 0;
+	_count = 0;
 }
 
 template <typename T, typename Alloc>
 void Linkedlist<T, Alloc>::move(Linkedlist &t) {
-	if (t.count()) t.clear();
-	t.base_node.prev = 0;
-	t.end_node.next = 0;
-	t._count = _count;
-	if (_count == 0) {
-		t.base_node.next = &t.end_node;
-		t.end_node.prev = &t.base_node;
-	} else {
-		t.base_node.next = base_node.next;
-		t.base_node.next->prev = &t.base_node;
-		t.end_node.prev = end_node.prev;
-		t.end_node.prev->next = &t.end_node;
+	t.clear();
+	t.head.prev = 0;
+	t.tail.next = 0;
+	if ((t._count = _count) == 0) {
+		t.head.next = &t.tail;
+		t.tail.prev = &t.head;
+		return;
 	}
-	base_node.prev = 0;
-	base_node.next = &end_node;
-	end_node.prev = &base_node;	
-	end_node.next = 0;
+	t.head.next = head.next;
+	t.tail.prev = tail.prev;
+	head.next = &tail;
+	tail.prev = &head;
 	_count = 0;
 }
 
 template <typename T, typename Alloc>
 void Linkedlist<T, Alloc>::swap(Linkedlist &t) {
-	Algorithm::swap(base_node, t.base_node);
-	Algorithm::swap(end_node, t.end_node);
-	Algorithm::swap(_count, t._count);
-}
-
-template <typename T, typename Alloc>
-size_t Linkedlist<T, Alloc>::push(const value_t &val) {
-	Linkedlist_Node<T> *node;
-	node = allocator.alloc(1);
-	node->construct(val);
-	node->prev = end_node.prev;
-	node->next = &end_node;
-	node->prev->next = node;
-	end_node.prev = node;
-	return ++_count;	
-}
-
-template <typename T, typename Alloc>
-typename Linkedlist<T, Alloc>::value_t Linkedlist<T, Alloc>::pop() {
-	Linkedlist_Node<T> *last;
-	last = end_node.prev;
-	if (last == &base_node) throw Enodata();
-	value_t tmp(last->val);
-	last->prev->next = &end_node;
-	end_node.prev = last->prev;
-	last->destroy();
-	allocator.free(last);
-	--_count;
-	return tmp;
-}
-
-template <typename T, typename Alloc>
-size_t Linkedlist<T, Alloc>::unshift(const value_t &val) {
-	Linkedlist_Node<T> *node;
-	node = allocator.alloc(1);
-	node->construct(val);
-	node->prev = &base_node;
-	node->next = base_node.next;
-	base_node.next->prev = node;
-	base_node.next = node;
-	return ++_count;	
-}
-
-template <typename T, typename Alloc>
-typename Linkedlist<T, Alloc>::value_t Linkedlist<T, Alloc>::shift() {
-	Linkedlist_Node<T> *first;
-	first = base_node.next;
-	if (first == &end_node) throw Enodata();
-	value_t tmp(first->val);
-	base_node.next = first->next;
-	first->next->prev = &base_node;
-	first->destroy();
-	allocator.free(first);
-	--_count;
-	return tmp;
+	Linkedlist tmp;
+	t.move(tmp);
+	this->move(t);
+	tmp.move(*this);
 }
 
 template <typename T, typename Alloc>
 void Linkedlist<T, Alloc>::clear() {
-	Linkedlist_Node<T> *node, *next;
+	node_t *node, *next;
 	if (_count == 0) return;
-	for (node = base_node.next; node != &end_node; node = next) {
-		node->destroy();
+	for (node = head.next; node != &tail; node = next) {
 		next = node->next;
-		allocator.free(node);
+		node->destroy();
+		allocator.free(node);	
 	}
-	base_node.prev = 0;
-	base_node.next = &end_node;
-	end_node.prev = &base_node;
-	end_node.next = 0;
 	_count = 0;
+	head.next = &tail;
+	tail.prev = &head;
 }
 
 template <typename T, typename Alloc>
-void Linkedlist<T, Alloc>::resize(size_t n, const value_t &val) { 
-	Linkedlist_Node<T> *node;
-	if (n == _count) return;
-	while (n > _count) {
-		node = allocator.alloc(1);
-		node->construct(val);
-		node->prev = end_node.prev;
-		node->next = &end_node;
-		node->prev->next = node;
-		end_node.prev = node;
-		++_count;
+T &Linkedlist<T, Alloc>::operator [] (ssize_t index) {
+	node_t *node;
+	if (index < 0) {
+		index *= -1;
+		if (index >= _count) throw Erange();
+		node = &tail;
+		for (size_t i = 0; i != index; ++i) {
+			node = node->prev; 	
+		}
+	} else {
+		if (index >= _count) throw Erange();
+		node = head.next;
+		for (size_t i = 0; i != index; ++i) {
+			node = node->next;
+		}
 	}
-	while (n < _count) {
-		node = end_node.prev;
-		node->prev->next = &end_node;
-		end_node.prev = node->prev;
-		node->destroy();
-		allocator.free(node);
-		--_count;
-	}
-}	
+	return node->value;
+}
 
 template <typename T, typename Alloc>
-size_t Linkedlist<T, Alloc>::insert(Iterator pos, const value_t &val) {
-	Linkedlist_Node<T> *node;
+const T &Linkedlist<T, Alloc>::operator [] (ssize_t index) const {
+	node_t *node;
+	if (index < 0) {
+		index *= -1;
+		if (index >= _count) throw Erange();
+		node = &tail;
+		for (size_t i = 0; i != index; ++i) {
+			node = node->prev; 	
+		}
+	} else {
+		if (index >= _count) throw Erange();
+		node = head.next;
+		for (size_t i = 0; i != index; ++i) {
+			node = node->next;
+		}
+	}
+	return node->value;
+}
+
+template <typename T, typename Alloc>
+void Linkedlist<T, Alloc>::push(const T &val) {
+	node_t *node;
+	node = allocator.alloc(1);	
+	node->construct(val);
+	node->prev = tail.prev;
+	node->prev->next = node;
+	node->next = &tail;
+	tail.prev = node;
+	++_count;
+}
+
+template <typename T, typename Alloc>
+T Linkedlist<T, Alloc>::pop() {
+	if (_count == 0) throw Enodata();
+	node_t *last_node = tail.prev;
+	T tmp(last_node->value);
+	tail.prev = last_node->prev;
+	last_node->prev->next = &tail;
+	last_node->destroy();
+	allocator.free(last_node);
+	--_count;
+	return tmp;
+}
+
+template <typename T, typename Alloc>
+void Linkedlist<T, Alloc>::unshift(const T &val) {
+	node_t *node;
 	node = allocator.alloc(1);
 	node->construct(val);
-	node->next = pos.curr;
+	node->next = head.next;
+	head.next = node;
+	node->prev = &head;
+	node->next->prev = node;
+	++_count;
+}
+
+template <typename T, typename Alloc>
+T Linkedlist<T, Alloc>::shift() {
+	if (_count == 0) throw Enodata();
+	node_t *first_node = head.next;
+	T tmp(first_node->value);
+	head.next = first_node->next;
+	first_node->next->prev = &head;
+	first_node->destroy();
+	allocator.free(first_node);
+	--_count;
+	return tmp;	
+}
+
+template <typename T, typename Alloc>
+typename Linkedlist<T, Alloc>::Iterator Linkedlist<T, Alloc>::insertAt(Iterator pos, const T &val) {
+	node_t *node;
+	node = allocator.alloc(1);
+	node->construct(val);
 	node->prev = pos.curr->prev;
 	node->prev->next = node;
+	node->next = pos.curr;
 	node->next->prev = node;
-	return ++_count;
+	++_count;
+	return Iterator(node->next, pos.index + 1);
 }
 
 template <typename T, typename Alloc>
-void Linkedlist<T, Alloc>::remove(Iterator pos, size_t n) {
-	Linkedlist_Node<T> *node, *next;
-	if (n > _count) throw Erange();
+typename Linkedlist<T, Alloc>::Iterator Linkedlist<T, Alloc>::removeAt(Iterator pos, size_t n) {
+	if (pos.index + n > _count) throw Erange();
+	node_t *before_pos = pos.curr->prev, *next;
+	size_t saved_pos = pos.index;
 	for (size_t i = 0; i != n; ++i) {
-		if (pos == &end_node) throw Erange();
-		pos.curr->destroy();
 		next = pos.curr->next;
-		pos.curr->prev->next = next;
-		pos.curr->next->prev = pos.curr->prev;
+		pos.curr->destroy();
 		allocator.free(pos.curr);
-		pos = next;
-		--_count;
+		pos.curr = next;	
 	}
+	before_pos->next = pos.curr;
+	pos.curr->prev = before_pos; 
+	return Iterator(pos.curr, ++saved_pos);
 }
 
 template <typename T, typename Alloc>
-void Linkedlist<T, Alloc>::fill(Iterator pos, size_t n, const value_t &val) {
-	size_t i = 0;
-	Linkedlist_Node<T> *node;
-	while (pos.curr != &end_node) {
-		pos.curr->val = val;
-		++pos; ++i; ++_count;
-		if (i == n) return;
+void Linkedlist<T, Alloc>::insert(ssize_t index, const T &val) {
+	if (index < 0) index = _count + index;
+	if (index > _count) throw Erange();
+	size_t i;
+	node_t *node;
+	if (_count - index > index) {
+		node = head.next;
+		for (i = 0; i != index; ++i) {
+			node = node->next;
+		}
+	} else {
+		node = &tail;
+		for (i = _count; i != index; --i) {
+			node = node->prev;
+		}
 	}
-	for (; i != n; ++i) {
-		node = allocator.alloc(1);
-		node->construct(val);
-		node->next = &end_node;
-		node->prev = end_node.prev;
-		node->prev->next = node;
-		end_node.prev = node;
-		++_count;
-	}
+	static_cast<void>(this->insertAt(Iterator(node, index), val));
+}
+
+template <typename T, typename Alloc>
+void Linkedlist<T, Alloc>::remove(ssize_t index, size_t n) {
+	if (index < 0) index = _count + index;
+	if (index + n > _count) throw Erange();
+	size_t i, index_last;
+	node_t *node, *prev, *saved;
+	if (_count - index > index) {
+		node = head.next;
+		for (i = 0; i != index; ++i) {
+			node = node->next;
+		}
+		static_cast<void>(this->removeAt(Iterator(node, index), n));
+	} else {
+		node = &tail;
+		index_last = index + n - 1;
+		for (i = _count; i != index_last; --i) {
+			node = node->prev;
+		}
+		saved = node->next;
+		for (--index; i != index; --i) {
+			node->destroy();
+			prev = node->prev;
+			allocator.free(node);
+			node = prev;
+		}
+		saved->prev = node;
+		node->next = saved;	
+	} 
 }
 
 template <typename T, typename Alloc>
 template <typename InputIter>
-void Linkedlist<T, Alloc>::set(typename Const<InputIter>::type p, size_t n) {
-	Linkedlist_Node<T> *node, *tmp;
-	size_t i = 0;
-	for (node = base_node.next; node != &end_node; node = node->next) {
-		node->val = *p++;
-		if (i++ == n) break;
+void Linkedlist<T, Alloc>::set(InputIter it, size_t n) {
+	node_t *node, *next;
+	size_t i;
+	node = head.next;
+	for (i = 0; i != n; ++i, ++it) {
+		if (node == &tail) break;
+		node->value = *it;
+		node = node->next;
 	}
-	if (i == n) {
-		end_node.prev = node->prev;
-		for (; node != &end_node; node = tmp) {
-			tmp = node->next;
-			node->destroy();
-			allocator.free(node);	
-		}
-		_count = n;
-		return;
+	for (; node != &tail; node = next) {
+		next = node->next;
+		node->destroy();
+		allocator.free(node);
 	}
-	for (; i != n; ++i) {
+	for (; i != n; ++i, ++it) {
 		node = allocator.alloc(1);
-		node->construct(*p++);
-		node->prev = end_node.prev;
-		node->next = &end_node;
+		node->construct(*it);
+		node->next = &tail;
+		node->prev = tail.prev;
+		node->next->prev = node;
 		node->prev->next = node;
-		end_node.prev = node;
-	}		
-}
-
-template <typename T, typename Alloc>
-void Linkedlist<T, Alloc>::set(const value_t *p, size_t n) {
-	this->set(p, n);
-}
-
-template <typename T, typename Alloc>
-typename Linkedlist<T, Alloc>::Iterator Linkedlist<T, Alloc>::find(const value_t &val) const {
-	Linkedlist_Node<T> *node;
-	for (node = base_node.next; node != &end_node; node = node->next) {
-		if (node->val == val) return Linkedlist_Iterator<T, Alloc>(node);
 	}
-	return Linkedlist_Iterator<T, Alloc>(&end_node);
+	_count = n;
 }
 
 template <typename T, typename Alloc>
-typename Linkedlist<T, Alloc>::Iterator Linkedlist<T, Alloc>::rfind(const value_t &val) const {
-	Linkedlist_Node<T> *node;
-	for (node = end_node.prev; node != &base_node; node = node->prev) {
-		if (node->val == val) return Linkedlist_Iterator<T, Alloc>(node);
-	}
-	return Linkedlist_Iterator<T, Alloc>(&end_node);
-}
-
-template <typename T, typename Alloc>
-typename Linkedlist<T, Alloc>::ref_t Linkedlist<T, Alloc>::operator [] (ssize_t index) {
-	size_t i = 0, real_index;
-	Linkedlist_Node<T> *node;
-	if (index < 0) real_index = _count + index;
-	else real_index = index;
-	if (real_index >= _count) throw Erange();
-	if (real_index <= _count - real_index) {
-		for (node = base_node.next; node != &end_node; node = node->next) {
-			if (i == real_index) return node->val;
-			++i;
+void Linkedlist<T, Alloc>::resize(size_t n) {
+	node_t *node, *saved;
+	node = tail.prev;
+	if (_count > n) {
+		for (; _count > n; --_count) {
+			node->destroy();
+			saved = node->prev;
+			allocator.free(node);
+			node = saved;
 		}
+		node->next = &tail;
+		tail.prev = node;
+		return;
 	} else {
-		i = _count - 1;	
-		for (node = end_node.prev; node != &base_node; node = node->prev) {
-			if (i == real_index) return node->val;
-			--i;
+		for (; _count < n; ++_count) {
+			node = allocator.alloc(1);
+			node->construct();
+			node->prev = tail.prev;
+			node->next = &tail;
+			node->prev->next = node;
+			tail.prev = node;
 		}
 	}
 }
 
 template <typename T, typename Alloc>
-typename Const<typename Linkedlist<T, Alloc>::ref_t>::type Linkedlist<T, Alloc>::operator [] (ssize_t index) const {
-	size_t i = 0, real_index;
-	Linkedlist_Node<T> *node;
-	if (index < 0) real_index = _count + index;
-	else real_index = index;
-	if (real_index >= _count) throw Erange();
-	if (real_index <= _count - real_index) {
-		for (node = base_node.next; node != &end_node; node = node->next) {
-			if (i == real_index) return node->val;
-			++i;
+void Linkedlist<T, Alloc>::resize(size_t n, const T &val) {
+	node_t *node, *saved;
+	node = tail.prev;
+	if (_count > n) {
+		for (; _count > n; --_count) {
+			node->destroy();
+			saved = node->prev;
+			allocator.free(node);
+			node = saved;
 		}
+		node->next = &tail;
+		tail.prev = node;
+		return;
 	} else {
-		i = _count - 1;	
-		for (node = end_node.prev; node != &base_node; node = node->prev) {
-			if (i == real_index) return node->val;
-			--i;
+		for (; _count < n; ++_count) {
+			node = allocator.alloc(1);
+			node->construct(val);
+			node->prev = tail.prev;
+			node->next = &tail;
+			node->prev->next = node;
+			tail.prev = node;
 		}
 	}
 }
 
 template <typename T, typename Alloc>
-typename Linkedlist<T, Alloc>::Iterator Linkedlist<T, Alloc>::from(ssize_t index) {
-	size_t i = 0, real_index;
-	Linkedlist_Node<T> *node;
-	if (index < 0) real_index = _count + index;
-	else real_index = index;
-	if (real_index >= _count) throw Erange();
-	if (real_index <= _count - real_index) {
-		for (node = base_node.next; node != &end_node; node = node->next) {
-			if (i == real_index) return typename Linkedlist<T, Alloc>::Iterator(node);
-			++i;
-		}
-	} else {
-		i = _count - 1;
-		for (node = end_node.prev; node != &base_node; node = node->prev) {
-			if (i == real_index) return typename Linkedlist<T, Alloc>::Iterator(node);
-			--i;
-		}
-	}
+Linkedlist<T, Alloc>::Linkedlist(size_t n) {
+	head.prev = 0;
+	head.next = &tail;
+	tail.prev = &head;
+	tail.next = 0;
+	this->resize(n);
 }
 
 template <typename T, typename Alloc>
-typename Const<typename Linkedlist<T, Alloc>::Iterator>::type Linkedlist<T, Alloc>::from(ssize_t index) const {
-	size_t i = 0, real_index;
-	Linkedlist_Node<T> *node;
-	if (index < 0) real_index = _count + index;
-	else real_index = index;
-	if (real_index >= _count) throw Erange();
-	if (real_index <= _count - real_index) {
-		for (node = base_node.next; node != &end_node; node = node->next) {
-			if (i == real_index) return typename Linkedlist<T, Alloc>::Iterator(node);
-			++i;
-		}
-	} else {
-		i = _count - 1;
-		for (node = end_node.prev; node != &base_node; node = node->prev) {
-			if (i == real_index) return typename Linkedlist<T, Alloc>::Iterator(node);
-			--i;
-		}
-	}
+Linkedlist<T, Alloc>::Linkedlist(size_t n, const T &val) {
+	head.prev = 0;
+	head.next = &tail;
+	tail.prev = &head;
+	tail.next = 0;
+	this->resize(n, val);
 }
+
+template <typename T, typename Alloc>
+Linkedlist<T, Alloc>::Linkedlist(const T *p, size_t n) {
+	head.prev = 0;
+	head.next = &tail;
+	tail.prev = &head;
+	tail.next = 0;
+	this->set<const T*>(p, n);
+}
+

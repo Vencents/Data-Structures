@@ -24,7 +24,7 @@ bool Multiset<T, Container>::exists(const Multiset &m) {
 }
 
 template <typename T, typename Container>
-size_t Multiset<T, Container>::countof(const value_t &key) {
+size_t Multiset<T, Container>::countof(const T &key) {
 	const node_t *p;
 	p = c.find(key);
 	if (p == 0) return 0;
@@ -42,7 +42,7 @@ void Multiset<T, Container>::scale(size_t n) {
 }	
 
 template <typename T, typename Container>
-void Multiset<T, Container>::insert(const value_t &key) {
+void Multiset<T, Container>::insert(const T &key) {
 	node_t n(key);
 	const node_t *p;
 	p = c.find(n);
@@ -52,7 +52,7 @@ void Multiset<T, Container>::insert(const value_t &key) {
 }
 
 template <typename T, typename Container>
-void Multiset<T, Container>::insert(const value_t &key, size_t n) {
+void Multiset<T, Container>::insert(const T &key, size_t n) {
 	node_t node(key, n);
 	const node_t *p;
 	p = c.find(node);
@@ -71,14 +71,14 @@ void Multiset<T, Container>::insert(const Multiset &m) {
 }
 
 template <typename T, typename Container>
-void Multiset<T, Container>::remove(const value_t &key) {
+void Multiset<T, Container>::remove(const T &key) {
 	const node_t *p;
 	p = c.find(key);
 	if (p == 0) throw Erange();
 	if (--p->count == 0) c.remove(key);
 }
 template <typename T, typename Container>
-void Multiset<T, Container>::remove(const value_t &key, size_t n) {
+void Multiset<T, Container>::remove(const T &key, size_t n) {
 	const node_t *p;
 	p = c.find(key);
 	if (p == 0) throw Erange();

@@ -9,8 +9,6 @@ protected:
 	mutable Container c;
 public:
 	typedef T	value_t;
-	typedef T	*ptr_t;
-	typedef T	&ref_t;
 	typedef typename Container::Iterator	Iterator;
 
 	Set() : c() {}
@@ -25,19 +23,19 @@ public:
 	inline Iterator end() const
 		{ return c.end(); }
 	
-	inline bool exists(const value_t &key) const
+	inline bool exists(const T &key) const
 		{ return c.exists(key); }
 	bool exists(const Set &s) const;
 	
-	inline void insert(const value_t &key)
+	inline void insert(const T &key)
 		{ c.insert(key); }
 	void insert(const Set &s);
 
-	inline void remove(const value_t &key)
+	inline void remove(const T &key)
 		{ c.remove(key); }
 	void remove(const Set &s);
 
-	inline const value_t *find(const value_t &k) const
+	inline const T *find(const T &k) const
 		{ return c.find(k); }
 	inline size_t count() const
 		{ return c.count(); }

@@ -9,7 +9,6 @@ protected:
 	Container c;
 public:
 	typedef typename Container::value_t	value_t;
-	typedef typename Container::ref_t	ref_t;
 
 	Deque() : c() {}
 	Deque(const Deque &d) : c(d.c) {}
@@ -18,22 +17,22 @@ public:
 	Deque &operator = (const Deque &d)
 		{ c = d.c; return *this; }
 
-	inline void push(typename Const<ref_t>::type val)
+	inline void push(const T &val)
 		{ c.push(val); }
 	
-	inline value_t pop()
+	inline T pop()
 		{ return c.pop(); }
 
-	inline void unshift(typename Const<ref_t>::type val)
+	inline void unshift(const T &val)
 		{ c.unshift(val); }
 
-	inline value_t shift()
+	inline T shift()
 		{ return c.shift(); }
 
-	inline value_t first() const
+	inline T first() const
 		{ return c.first(); }
 
-	inline value_t last() const
+	inline T last() const
 		{ return c.last(); }
 
 	inline size_t count() const

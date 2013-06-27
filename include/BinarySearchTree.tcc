@@ -50,7 +50,7 @@ typename BinarySearchTree<T, Alloc>::Iterator BinarySearchTree<T, Alloc>::end() 
 }
 
 template <typename T, typename Alloc>
-bool BinarySearchTree<T, Alloc>::exists(const value_t &key) const {
+bool BinarySearchTree<T, Alloc>::exists(const T &key) const {
 	node_t *node;
 	for (node = root; node != 0; ) {
 		if (key == node->key) return true;
@@ -61,20 +61,6 @@ bool BinarySearchTree<T, Alloc>::exists(const value_t &key) const {
 	}
 	return false;
 }
-/*
-template <typename T, typename Alloc>
-typename BinarySearchTree<T, Alloc>::const_ptr_t BinarySearchTree<T, Alloc>::find(const value_t &key) const {
-	node_t *node;
-	for (node = root; node != 0; ) {
-		if (key == node->key) return &node->key;
-		if (key < node->key)
-			node = node->left;
-		else
-			node = node->right;
-	}
-	return 0;
-}
-*/
 
 template <typename T, typename Alloc>
 void BinarySearchTree<T, Alloc>::rec_copy(BinarySearchTree &t, const node_t *node) const {
@@ -128,7 +114,7 @@ void BinarySearchTree<T, Alloc>::swap(BinarySearchTree &b) {
 }
 
 template <typename T, typename Alloc>
-void BinarySearchTree<T, Alloc>::rec_insert(node_t *node, const value_t &key) {
+void BinarySearchTree<T, Alloc>::rec_insert(node_t *node, const T &key) {
 	node_t *newnode;
 	if (key < node->key) {
 		if (node->left == 0) {
@@ -154,7 +140,7 @@ void BinarySearchTree<T, Alloc>::rec_insert(node_t *node, const value_t &key) {
 }
 
 template <typename T, typename Alloc>
-void BinarySearchTree<T, Alloc>::insert(const value_t &key) {
+void BinarySearchTree<T, Alloc>::insert(const T &key) {
 	if (root == 0) {
 		root = allocator.alloc(1);
 		allocator.construct(root);
@@ -176,7 +162,7 @@ void BinarySearchTree<T, Alloc>::replace_node_in_parent(node_t *node, node_t *ne
 }
 
 template <typename T, typename Alloc>
-void BinarySearchTree<T, Alloc>::rec_remove(node_t *node, const value_t &key) {
+void BinarySearchTree<T, Alloc>::rec_remove(node_t *node, const T &key) {
 	node_t *successor;
 	if (key < node->key) {
 		if (node->left == 0) throw Erange();
@@ -200,7 +186,7 @@ void BinarySearchTree<T, Alloc>::rec_remove(node_t *node, const value_t &key) {
 }
 
 template <typename T, typename Alloc>
-void BinarySearchTree<T, Alloc>::remove(const value_t &key) {
+void BinarySearchTree<T, Alloc>::remove(const T &key) {
 	if (_count == 0) throw Enodata();
 	this->rec_remove(root, key);
 }

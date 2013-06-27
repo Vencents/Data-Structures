@@ -31,8 +31,6 @@ protected:
 	mutable size_t _count;
 public:
 	typedef T			value_t;
-	typedef T			*ptr_t;
-	typedef T			&ref_t;
 	typedef Multiset_Iterator<T, Container>	Iterator;
 
 	Multiset() : c(), _count() {}
@@ -46,24 +44,24 @@ public:
 	inline Iterator end() const
 		{ return Iterator(c.end(), 0); }
 
-	inline bool exists(const value_t &key)
+	inline bool exists(const T &key)
 		{ return c.exists(key); }
 	bool exists(const Multiset &m);
 
 	inline size_t count() const { return _count; }
-	size_t countof(const value_t &key);
+	size_t countof(const T &key);
 	
 	void scale(size_t n);
 	
-	void insert(const value_t &key);
-	void insert(const value_t &key, size_t n);
+	void insert(const T &key);
+	void insert(const T &key, size_t n);
 	void insert(const Multiset &m);
 	
-	void remove(const value_t &key);
-	void remove(const value_t &key, size_t n);
+	void remove(const T &key);
+	void remove(const T &key, size_t n);
 	void remove(const Multiset &m);
 
-	inline const value_t *find(const value_t &key) const
+	inline const T *find(const T &key) const
 		{ return &c.find(key)->key; }
 	inline void clear()
 		{ c.clear(); }
@@ -81,8 +79,6 @@ protected:
 	mutable typename Container::Iterator it;
 public:
 	typedef T	value_t;
-	typedef T	*ptr_t;
-	typedef T	&ref_t;
 
 	Multiset_Iterator() : it(), pos() {}
 	Multiset_Iterator(
@@ -96,9 +92,9 @@ public:
 	const Multiset_Iterator &operator =(const Multiset_Iterator &i) const
 		{ it = i.it; return *this; }
 	
-	const value_t &operator * () const
+	const T &operator * () const
 		{ return it->key; }
-	const value_t *operator -> () const
+	const T *operator -> () const
 		{ return &it->key; }
 	
 	const Multiset_Iterator &operator ++ () const {

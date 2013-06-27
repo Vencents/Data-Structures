@@ -52,6 +52,8 @@ public:
 	Reverser() : it() {}
 	Reverser(_Iter i) : it(i) { }
 	Reverser(const Reverser &r) : it(r.it) { }
+
+	operator _Iter () { return it; }
 	
 	ref_t operator * () { _Iter tmp = it; return *--tmp; }
 	const ref_t operator * () const { _Iter tmp = it; return *--tmp; }

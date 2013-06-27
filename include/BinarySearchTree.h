@@ -16,17 +16,15 @@ template <typename T>
 class BinarySearchTree_Node {
 public:
 	typedef T	value_t;
-	typedef T	*ptr_t;
-	typedef T	&ref_t;
 
-	value_t	key;
+	T	key;
 	mutable BinarySearchTree_Node *parent, *left, *right;
 
 	BinarySearchTree_Node() : parent(0), left(0), right(0) {}
 	BinarySearchTree_Node(const BinarySearchTree_Node &n) :
 		key(n.key), parent(n.parent), left(n.left), right(n.right) {}
 	BinarySearchTree_Node &operator =(const BinarySearchTree_Node &n) {
-		key = value_t(n.key);
+		key = T(n.key);
 		parent = n.parent;
 		left = n.left;
 		right = n.right;
@@ -34,30 +32,27 @@ public:
 	}
 
 	inline void construct()
-		{ new ((void*)&key)value_t(); }
-	inline void construct(typename Const<ref_t>::type v)
-		{ new ((void*)&key)value_t(v); }
+		{ new ((void*)&key)T(); }
+	inline void construct(const T &v)
+		{ new ((void*)&key)T(v); }
 	inline void destroy()
-		{ ((value_t*)&key)->~value_t(); }
+		{ ((T*)&key)->~T(); }
 };
 
 template <typename T, typename Alloc = Allocator>
 class BinarySearchTree {
 public:
 	typedef T	value_t;
-	typedef T	*ptr_t;
-	typedef T	&ref_t;
 
 	typedef BinarySearchTree_Iterator<T, Alloc>	Iterator;
 protected:
 	typedef BinarySearchTree_Node<T>	node_t;
-	typedef typename Const<ptr_t>::type	const_ptr_t;
 	node_t					*root;
 	Object_Allocator<node_t, Alloc>	allocator;
 	size_t _count;
 
-	void rec_remove(node_t *n, const value_t &key);
-	void rec_insert(node_t *n, const value_t &key);
+	void rec_remove(node_t *n, const T &key);
+	void rec_insert(node_t *n, const T &key);
 	void rec_clear(node_t *n);
 	void rec_copy(BinarySearchTree &t, const node_t *n) const;
 	void replace_node_in_parent(node_t *node, node_t *newnode);	
@@ -73,10 +68,10 @@ public:
 	void swap(BinarySearchTree &b);
 	void move(BinarySearchTree &b);
 
-	void insert(const value_t &key);
-	void remove(const value_t &key);
-	bool exists(const value_t &key) const;
-	const value_t *find(const value_t &key) const {
+	void insert(const T &key);
+	void remove(const T &key);
+	bool exists(const T &key) const;
+	const T *find(const T &key) const {
 		node_t *node;
 		for (node = root; node != 0; ) {
 			if (key == node->key) return &node->key;
@@ -102,8 +97,6 @@ protected:
 	mutable BinarySearchTree_Node<T> *node, *last_visited;
 public:
 	typedef T	value_t;
-	typedef T	*ptr_t;
-	typedef T	&ref_t;
 
 	BinarySearchTree_Iterator() : node(), last_visited() {}
 	BinarySearchTree_Iterator(const BinarySearchTree_Iterator &it) :
@@ -118,8 +111,8 @@ public:
 		return *this;
 	}
 
-	const value_t & operator * () const { return node->key; }
-	const value_t *operator -> () const { return &node->key; }
+	const T & operator * () const { return node->key; }
+	const T *operator -> () const { return &node->key; }
 	
 	const BinarySearchTree_Iterator &operator ++ () const;
 	

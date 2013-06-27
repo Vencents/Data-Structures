@@ -10,7 +10,6 @@ protected:
 	Container c;
 public:
 	typedef typename Container::value_t	value_t;
-	typedef typename Container::ref_t	ref_t;
 	
 	Queue() : c() {}
 	Queue(const Queue &q) : c(q.c) {}
@@ -19,13 +18,13 @@ public:
 	Queue &operator = (const Queue &q)
 		{ c = q.c; return *this; }
 	
-	inline void push(typename Const<ref_t>::type val)
+	inline void push(const T &val)
 		{ c.push(val); }
 
-	inline value_t pop()
+	inline T pop()
 		{ return c.shift(); }
 
-	inline value_t peek()
+	inline T peek()
 		{ return c.first(); }
 
 	inline size_t count()

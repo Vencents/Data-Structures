@@ -10,7 +10,6 @@ protected:
 	Container c;
 public:
 	typedef typename Container::value_t	value_t;
-	typedef typename Container::ref_t	ref_t;
 
 	Stack() : c() {}
 	Stack(const Stack &s) : c(s.c) {}
@@ -19,13 +18,13 @@ public:
 	Stack &operator = (const Stack &s)
 		{ c = s.c; return *this; }
 	
-	inline void push(typename Const<ref_t>::type val)
+	inline void push(const T &val)
 		{ c.push(val); }
 
-	inline value_t	pop()
+	inline T pop()
 		{ return c.pop(); }
 
-	inline value_t peek()
+	inline T peek()
 		{ return c.last(); }
 
 	inline size_t count()
