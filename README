@@ -1,4 +1,4 @@
-Abstract data structures:
+Abstract data structures (Adaptors):
 
 Deque		- A sequence which can be modified from the front or back.
 Dictionary	- A collection of (key, value) pairs, where each key is unique.
