@@ -151,7 +151,7 @@ typename Lst::value_t Algorithm::List::product(const Lst &lst) {
 	begin = lst.begin(); end = lst.end();
 	if (begin == end) return typename Lst::value_t();
 	typename Lst::value_t val(*begin++);
-	while (begin != end) val *= *begin++;
+	for (; begin != end; ++begin) val *= *begin;
 	return val;
 }
 
@@ -160,7 +160,7 @@ typename Lst::value_t Algorithm::List::reduce(const Lst &lst, Callback func) {
 	typename Lst::value_t result = typename Lst::value_t();
 	typename Const<typename Lst::Iterator>::type begin, end;
 	begin = lst.begin(); end = lst.end();
-	while (begin != end) func(result, *begin++);
+	for (; begin != end; ++begin) func(result, *begin);
 	return result;
 }
 
@@ -169,6 +169,6 @@ typename Lst::value_t Algorithm::List::sum(const Lst &lst) {
 	typename Lst::value_t val = typename Lst::value_t();
 	typename Const<typename Lst::Iterator>::type begin, end;
 	begin = lst.begin(); end = lst.end();
-	while (begin != end) val += *begin++;
+	for (; begin != end; ++begin) val += *begin;
 	return val;
 }
