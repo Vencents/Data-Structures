@@ -70,7 +70,7 @@
 	OutputIter Algorithm::copy(OutputIter it, InputIter src, Size n) {
 		Size i = Size();
 		OutputIter a = it;
-		for (; i != n; ++i) *a++ = *src++;
+		for (; i != n; ++i, ++a, ++src) *a = *src;
 		return it;
 	}
 

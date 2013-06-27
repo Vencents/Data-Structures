@@ -9,6 +9,7 @@ protected:
 	Container c;
 public:
 	typedef T	value_t;
+
 	typedef typename Container::Iterator		Iterator;
 	typedef typename Container::Const_Iterator	Const_Iterator;
 
@@ -28,12 +29,12 @@ public:
 	inline Const_Iterator end() const
 		{ return c.end(); }
 
-	inline size_t push(const T &val)
-		{ return c.push(val); }
+	inline void push(const T &val)
+		{ c.push(val); }
 	inline T pop()
 		{ return c.pop(); }
-	inline size_t unshift(const T &val)
-		{ return c.unshift(val); }
+	inline void unshift(const T &val)
+		{ c.unshift(val); }
 	inline T shift()
 		{ return c.shift(); }
 
@@ -42,8 +43,8 @@ public:
 	inline void clear()
 		{ c.clear(); }
 
-	inline size_t insert(ssize_t pos, const T &val)
-		{ return c.insert(pos, val); }
+	inline void insert(ssize_t pos, const T &val)
+		{ c.insert(pos, val); }
 	inline void remove(ssize_t pos, size_t count = 1)
 		{ c.remove(pos, count); }
 

@@ -219,6 +219,7 @@ template <typename InputIter>
 void Array<T, Alloc>::set(InputIter it, size_t n) {
 	T *p;
 	size_t i = 0;
+	ptrdiff_t p_off;
 
 	for (p = _base; i != n && p != _dend; ++p, ++it, ++i) {
 		*p = *it;
@@ -227,7 +228,11 @@ void Array<T, Alloc>::set(InputIter it, size_t n) {
 		allocator.destroy(p);
 	}
 	for (; i != n; ++i, ++it, ++p) {
-		if (_dend == _end) double_capacity();
+		if (p == _end) {
+			p_off = p - _base;
+			double_capacity();
+			p = _base + p_off;
+		}
 		allocator.construct(p, *it);
 	}
 	_dend = _base + n;

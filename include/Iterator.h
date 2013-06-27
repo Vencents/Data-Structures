@@ -2,63 +2,23 @@
 #define ITER_H
 #include "Types.h"
 
-
-template <typename _Iterator>
-class Iterator_Traits {
-public:
-	typedef typename _Iterator::value_t	value_t;
-	typedef typename _Iterator::ptr_t	ptr_t;
-	typedef typename _Iterator::ref_t	ref_t;
-};
-
-template <typename T>
-class Iterator_Traits<T*> {
-public:
-	typedef T	value_t;
-	typedef T	*ptr_t;
-	typedef T	&ref_t;
-};
-
-template <typename T>
-class Iterator_Traits<const T*> {
-public:
-	typedef T	value_t;
-	typedef const T	*ptr_t;
-	typedef const T	&ref_t;
-};
-
-template <typename T, typename _ptr_t = T*, typename _ref_t = T&>
-class Iterator {
-public:
-	typedef T	value_t;
-	typedef _ptr_t	ptr_t;
-	typedef _ref_t	ref_t;
-};
-
 template <typename _Iter>
-class Reverser
-: public Iterator <typename Iterator_Traits<_Iter>::value_t,
-			typename Iterator_Traits<_Iter>::ptr_t,
-			typename Iterator_Traits<_Iter>::ref_t>
-{
+class Reverser {
 protected:
 	mutable _Iter it;
-	typedef Iterator_Traits<_Iter> traits;
 public:
-	typedef typename traits::value_t	value_t;
-	typedef typename traits::ptr_t		ptr_t;
-	typedef typename traits::ref_t		ref_t;
+	typedef typename _Iter::value_t	value_t;
 
 	Reverser() : it() {}
 	Reverser(_Iter i) : it(i) { }
 	Reverser(const Reverser &r) : it(r.it) { }
 
-	operator _Iter () { return it; }
+	//operator _Iter () { return it; }
 	
-	ref_t operator * () { _Iter tmp = it; return *--tmp; }
-	const ref_t operator * () const { _Iter tmp = it; return *--tmp; }
-	ptr_t operator -> () { return &(operator*()); }
-	const ptr_t operator -> () const { return &(operator*()); }
+	value_t &operator * () { _Iter tmp = it; return *--tmp; }
+	const value_t &operator * () const { _Iter tmp = it; return *--tmp; }
+	value_t *operator -> () { return &(operator*()); }
+	const value_t *operator -> () const { return &(operator*()); }
 	Reverser &operator ++ () const { --it; return *this; }
 	Reverser &operator -- () const { ++it; return *this; }
 	Reverser operator ++ (int) const {
@@ -83,10 +43,10 @@ public:
 	Reverser &operator -= (ptrdiff_t n) const {
 		it += n; return *this;
 	}
-	ref_t	operator [] (ptrdiff_t n) {
+	value_t &operator [] (ptrdiff_t n) {
 		return *(*this + n);
 	}
-	const ref_t operator [] (ptrdiff_t n) const {
+	const value_t &operator [] (ptrdiff_t n) const {
 		return *(*this + n);
 	}
 	
@@ -99,13 +59,11 @@ public:
 };
 
 template <typename Container>
-class Pusher
-: public Iterator<typename Container::value_t,
-			typename Container::ptr_t,
-			typename Container::ref_t> {
+class Pusher {
 protected:
 	Container *c;
 public:
+	typedef typename Container::value_t value_t;
 	Pusher() : c() {}
 	Pusher(Container &i) : c(&i) {}
 	Pusher(const Pusher &p) : c(p.c) {}
@@ -113,19 +71,17 @@ public:
 	Pusher &operator * () { return *this; }
 	Pusher &operator ++ () { return *this; }
 	Pusher &operator ++ (int) { return *this; }
-	Pusher &operator = (typename Const<typename Container::ref_t>::type val) {	
+	Pusher &operator = (const value_t &val) {	
 		c->push(val); return *this; 	
 	}	
 };
 
 template <typename Container>
-class Unshifter
-: public Iterator<typename Container::value_t,
-			typename Container::ptr_t,
-			typename Container::ref_t> {
+class Unshifter {
 protected:
 	Container *c;
 public:
+	typedef typename Container::value_t	value_t;
 	Unshifter() : c() {}
 	Unshifter(Container &i) : c(&i) {}
 	Unshifter(const Unshifter &s) : c(s.c) {}
@@ -133,7 +89,7 @@ public:
 	Unshifter &operator * () { return *this; }
 	Unshifter &operator ++ () { return *this; }
 	Unshifter &operator ++ (int) { return *this; }
-	Unshifter &operator = (typename Const<typename Container::ref_t>::type val) {
+	Unshifter &operator = (const value_t &val) {
 		c->unshift(val); return *this;
 	}
 };
